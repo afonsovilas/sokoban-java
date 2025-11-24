@@ -15,14 +15,31 @@ public class Game {
     private Screen screen;
     private Hero hero;
     private List<Wall> walls;
+    private List<Box> boxes;
+    private List<Target> targets;
 
     public Game() {
         try {
 
-            TerminalSize terminalSize = new TerminalSize(20, 20);
+            TerminalSize terminalSize = new TerminalSize(50, 50);
             hero = new Hero(10, 10);
             this.walls = new ArrayList<>();
             walls.add(new Wall(15,15));
+            this.boxes = new ArrayList<>();
+            this.targets = new ArrayList<>();
+            targets.add(new Target(35,35));
+            boxes.add(new Box(30,30));
+            for (Box box : boxes) {
+                boolean isOnTarget = false;
+
+                for (Target target : targets) {
+                    if (box.getPosition().equals(target.getPosition())) {
+                        isOnTarget = true;
+                        break;
+                    }
+                }
+                box.setOnTarget(isOnTarget);
+            }
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
                     .setInitialTerminalSize(terminalSize);
             Terminal terminal = terminalFactory.createTerminal();
@@ -45,6 +62,12 @@ public class Game {
         hero.draw(graphics);
         for (Wall wall : walls) {
             wall.draw(graphics);
+        }
+        for (Target target : targets) {
+            target.draw(graphics);
+        }
+        for (Box box : boxes) {
+            box.draw(graphics);
         }
         screen.refresh();
     }
