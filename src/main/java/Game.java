@@ -1,4 +1,5 @@
 import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -7,14 +8,21 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
     private Screen screen;
+    private Hero hero;
+    private List<Wall> walls;
 
     public Game() {
         try {
 
             TerminalSize terminalSize = new TerminalSize(20, 20);
+            hero = new Hero(10, 10);
+            this.walls = new ArrayList<>();
+            walls.add(new Wall(15,15));
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
                     .setInitialTerminalSize(terminalSize);
             Terminal terminal = terminalFactory.createTerminal();
@@ -33,7 +41,11 @@ public class Game {
     void draw() throws IOException {
         screen.clear();
 
-
+        TextGraphics graphics = screen.newTextGraphics();
+        hero.draw(graphics);
+        for (Wall wall : walls) {
+            wall.draw(graphics);
+        }
         screen.refresh();
     }
 
