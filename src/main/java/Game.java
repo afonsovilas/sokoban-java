@@ -14,11 +14,16 @@ import java.util.List;
 public class Game {
     private Screen screen;
     private Level level;
+    private HeroController controller;
 
     public Game() {
         try {
 
             this.level = new Level1();
+
+            Collision collision = new Collision(level);
+            this.controller = new HeroController(level.getHero(), collision);
+
             TerminalSize terminalSize = new TerminalSize(level.getWidth(), level.getHeight());
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
                     .setInitialTerminalSize(terminalSize);
@@ -61,6 +66,18 @@ public class Game {
             System.exit(0);
         }
 
+        Position direction = null;
+
+        switch (key.getKeyType()) {
+            case ArrowUp -> direction = new Position(0, -1);
+            case ArrowDown -> direction = new Position(0, 1);
+            case ArrowLeft -> direction = new Position(-1, 0);
+            case ArrowRight -> direction = new Position(1, 0);
+        }
+
+        if (direction != null) {
+            controller.moveHero(direction);
+        }
     }
 
     public void run() {
