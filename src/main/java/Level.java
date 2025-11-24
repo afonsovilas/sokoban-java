@@ -57,24 +57,10 @@ public abstract class Level {
             box.draw(graphics);
         }
 
-
         if (hero != null) {
             hero.draw(graphics);
         }
     }
-
-    public void processKey(KeyStroke key) {
-        Position direction = null;
-
-        switch (key.getKeyType()) {
-            case ArrowUp -> direction = new Position(0, -1);
-            case ArrowDown -> direction = new Position(0, 1);
-            case ArrowLeft -> direction = new Position(-1, 0);
-            case ArrowRight -> direction = new Position(1, 0);
-        }
-
-    }
-
 
     public int getWidth() { return width; }
     public int getHeight() { return height; }
