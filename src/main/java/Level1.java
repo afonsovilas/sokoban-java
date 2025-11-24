@@ -21,12 +21,24 @@ public class Level1 extends Level {
             String line = LEVEL_DESIGN[y];
             for (int x = 0; x < width; x++) {
                 if (x >= line.length()) break;
-                char c = line.charAt(x);
 
-                if (c == '#') walls.add(new Wall(x, y));
-                else if (c == 'O') boxes.add(new Box(x, y));
-                else if (c == 'X') hero = new Hero(x, y);
-                else if(c== '.') targets.add(new Target(x,y));
+                char c = line.charAt(x);
+                Element element = ElementCreation.createElement(c, x, y);
+
+                if (element != null) {
+                    if (element instanceof Wall) {
+                        walls.add((Wall) element);
+                    }
+                    else if (element instanceof Box) {
+                        boxes.add((Box) element);
+                    }
+                    else if (element instanceof Hero) {
+                        hero = (Hero) element;
+                    }
+                    else if (element instanceof Target) {
+                        targets.add((Target) element);
+                    }
+                }
             }
         }
     }
