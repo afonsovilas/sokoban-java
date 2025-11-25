@@ -8,21 +8,15 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Game {
     private Screen screen;
     private Level level;
-    private HeroController controller;
 
     public Game() {
         try {
-
             this.level = new Level1();
-
-            Collision collision = new Collision(level);
-            this.controller = new HeroController(level.getHero(), collision);
+            this.level.initialize();
 
             TerminalSize terminalSize = new TerminalSize(level.getWidth(), level.getHeight());
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
@@ -33,7 +27,6 @@ public class Game {
             screen.setCursorPosition(null);
             screen.startScreen();
             screen.doResizeIfNecessary();
-
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,35 +42,15 @@ public class Game {
     private void processKey(KeyStroke key) {
 
         if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
-            try {
-                screen.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            try { screen.close(); } catch (IOException e) {}
             System.exit(0);
         }
-
         if (key.getKeyType() == KeyType.EOF) {
-            try {
-                screen.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            try { screen.close(); } catch (IOException e) {}
             System.exit(0);
         }
 
-        Position direction = null;
-
-        switch (key.getKeyType()) {
-            case ArrowUp -> direction = new Position(0, -1);
-            case ArrowDown -> direction = new Position(0, 1);
-            case ArrowLeft -> direction = new Position(-1, 0);
-            case ArrowRight -> direction = new Position(1, 0);
-        }
-
-        if (direction != null) {
-            controller.moveHero(direction);
-        }
+        level.processKey(key);
     }
 
     public void run() {
@@ -92,5 +65,4 @@ public class Game {
             e.printStackTrace();
         }
     }
-
 }
