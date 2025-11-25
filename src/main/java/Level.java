@@ -18,6 +18,8 @@ public abstract class Level {
     protected List<Box> boxes;
     protected List<Target> targets;
     protected GameRules gameRules;
+    protected HeroController controller;
+    protected Collision collision;
 
 
     public Level(int width, int height) {
@@ -30,6 +32,11 @@ public abstract class Level {
     }
 
     protected abstract void createLevel();
+
+    public void initialize() {
+        this.collision = new Collision(this);
+        this.controller = new HeroController(this.hero, this.collision);
+    }
 
 
     public void draw(TextGraphics graphics) {
@@ -61,6 +68,27 @@ public abstract class Level {
 
         if (hero != null) {
             hero.draw(graphics);
+        }
+    }
+
+    public void processKey(KeyStroke key) {
+        if (controller == null) return;
+
+        Position direction = null;
+
+        switch (key.getKeyType()) {
+            case ArrowUp -> direction = new Position(0, -1);
+            case ArrowDown -> direction = new Position(0, 1);
+            case ArrowLeft -> direction = new Position(-1, 0);
+            case ArrowRight -> direction = new Position(1, 0);
+        }
+
+        if (direction != null) {
+            controller.moveHero(direction);
+            if (gameRules.checkWin(this)) {
+                System.out.println("YOU WON!");
+                System.exit(0);
+            }
         }
     }
 

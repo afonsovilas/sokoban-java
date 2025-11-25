@@ -29,7 +29,7 @@ class ElementCreationTest {
 
     @Test
     void testCreateTarget() {
-        Element element = ElementCreation.createElement('.', 2, 2);
+        Element element = ElementCreation.createElement('*', 2, 2);
         assertNotNull(element);
         assertTrue(element instanceof Target);
         assertEquals(new Position(2, 2), element.getPosition());

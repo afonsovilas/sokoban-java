@@ -10,6 +10,6 @@ public class Target extends Element {
     @Override
     public void draw(TextGraphics graphics) {
         graphics.setForegroundColor(TextColor.Factory.fromString("#FF7F50"));
-        graphics.putString(new TerminalPosition(position.getX(), position.getY()), ".");
+        graphics.putString(new TerminalPosition(position.getX(), position.getY()), "*");
     }
 }
