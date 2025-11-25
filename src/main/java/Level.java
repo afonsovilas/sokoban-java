@@ -17,6 +17,7 @@ public abstract class Level {
     protected List<Wall> walls;
     protected List<Box> boxes;
     protected List<Target> targets;
+    protected GameRules gameRules;
 
 
     public Level(int width, int height) {
@@ -25,6 +26,7 @@ public abstract class Level {
         this.walls = new ArrayList<>();
         this.boxes = new ArrayList<>();
         this.targets = new ArrayList<>();
+        this.gameRules = new GameRules();
     }
 
     protected abstract void createLevel();
