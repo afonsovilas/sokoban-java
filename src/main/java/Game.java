@@ -8,14 +8,23 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
     private Screen screen;
     private Level level;
+    private List<Level> levels;
+    private int currLevelIndex = 0;
 
     public Game() {
         try {
-            this.level = new Level1();
+            this.levels = new ArrayList<>();
+            this.levels.add(new Level1());
+            this.levels.add(new Level2());
+
+            this.currLevelIndex = 0;
+            this.level = levels.get(currLevelIndex);
             this.level.initialize();
 
             TerminalSize terminalSize = new TerminalSize(level.getWidth(), level.getHeight());
@@ -59,6 +68,23 @@ public class Game {
                 draw();
                 KeyStroke key = screen.readInput();
                 processKey(key);
+
+                if (level.isFinished()) {
+                    currLevelIndex++;
+
+                    if (currLevelIndex < levels.size()) {
+
+                        level = levels.get(currLevelIndex);
+                        level.initialize();
+                        screen.clear();
+                    } else {
+
+                        System.out.println("You Won!");
+                        screen.close();
+                        System.exit(0);
+                    }
+                }
+
                 if (key.getKeyType() == KeyType.EOF) break;
             }
         } catch (IOException e) {
