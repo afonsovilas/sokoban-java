@@ -14,18 +14,18 @@ import java.util.List;
 public class Game {
     private Screen screen;
     private Level level;
-    private List<Level> levels;
-    private int currLevelIndex = 0;
+    private LevelLoader levelLoader;
+    private int currLevelIndex = 1;
 
     public Game() {
         try {
-            this.levels = new ArrayList<>();
-            this.levels.add(new Level1());
-            this.levels.add(new Level2());
+            this.levelLoader = new LevelLoader();
+            this.level = levelLoader.loadLevel(currLevelIndex);
 
-            this.currLevelIndex = 0;
-            this.level = levels.get(currLevelIndex);
-            this.level.initialize();
+            if (this.level == null) {
+                System.out.println("Erro: O ficheiro do nível não foi encontrado!");
+                System.exit(1);
+            }
 
             TerminalSize terminalSize = new TerminalSize(level.getWidth(), level.getHeight());
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
@@ -71,11 +71,12 @@ public class Game {
 
                 if (level.isFinished()) {
                     currLevelIndex++;
+                    Level nextLevel = levelLoader.loadLevel(currLevelIndex);
+                    if (nextLevel != null) {
+                        this.level = nextLevel;
+                        this.level.initialize();
 
-                    if (currLevelIndex < levels.size()) {
-
-                        level = levels.get(currLevelIndex);
-                        level.initialize();
+                        screen.doResizeIfNecessary();
                         screen.clear();
                     } else {
 

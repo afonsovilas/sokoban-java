@@ -8,7 +8,7 @@ import com.googlecode.lanterna.input.KeyType;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Level {
+public class Level {
     protected int width;
     protected int height;
 

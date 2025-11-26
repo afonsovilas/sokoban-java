@@ -16,10 +16,7 @@ class LevelTest {
     @BeforeEach
     void setUp() {
         graphics = mock(TextGraphics.class);
-        level = new Level(10, 10) {
-            protected void createLevel() {
-            }
-        };
+        level = new Level(10, 10);
     }
 
     @Test
