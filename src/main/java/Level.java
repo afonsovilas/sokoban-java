@@ -12,6 +12,7 @@ public abstract class Level {
     protected int width;
     protected int height;
 
+    private boolean isFinished = false;
 
     protected Hero hero;
     protected List<Wall> walls;
@@ -31,7 +32,27 @@ public abstract class Level {
         this.gameRules = new GameRules();
     }
 
-    protected abstract void createLevel();
+    public void loadLevel(String[] levelDesign) {
+        this.width = levelDesign[0].length();
+        this.height = levelDesign.length;
+
+        for (int y = 0; y < height; y++) {
+            String line = levelDesign[y];
+            for (int x = 0; x < width; x++) {
+                if (x >= line.length()) break;
+
+                char c = line.charAt(x);
+                Element element = ElementCreation.createElement(c, x, y);
+
+                if (element != null) {
+                    if (element instanceof Wall) walls.add((Wall) element);
+                    else if (element instanceof Box) boxes.add((Box) element);
+                    else if (element instanceof Hero) hero = (Hero) element;
+                    else if (element instanceof Target) targets.add((Target) element);
+                }
+            }
+        }
+    }
 
     public void initialize() {
         this.collision = new Collision(this);
@@ -86,8 +107,8 @@ public abstract class Level {
         if (direction != null) {
             controller.moveHero(direction);
             if (gameRules.checkWin(this)) {
-                System.out.println("YOU WON!");
-                System.exit(0);
+                this.isFinished = true;
+                System.out.println("Level Passesd!");
             }
         }
     }
@@ -98,6 +119,7 @@ public abstract class Level {
     public List<Wall> getWalls() { return walls; }
     public List<Box> getBoxes() { return boxes; }
     public List<Target> getTargets() { return targets; }
+    public boolean isFinished() {return isFinished; }
 
 }
 

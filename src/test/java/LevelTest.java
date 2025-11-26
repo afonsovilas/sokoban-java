@@ -17,7 +17,6 @@ class LevelTest {
     void setUp() {
         graphics = mock(TextGraphics.class);
         level = new Level(10, 10) {
-            @Override
             protected void createLevel() {
             }
         };
