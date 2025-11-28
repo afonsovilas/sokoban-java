@@ -13,19 +13,10 @@ import java.util.List;
 
 public class Game {
     private Screen screen;
-    private Level level;
-    private LevelLoader levelLoader;
-    private int currLevelIndex = 1;
+    private State state;
 
     public Game() {
         try {
-            this.levelLoader = new LevelLoader();
-            this.level = levelLoader.loadLevel(currLevelIndex);
-
-            if (this.level == null) {
-                System.out.println("Erro: O ficheiro do nível não foi encontrado!");
-                System.exit(1);
-            }
 
             TerminalSize terminalSize = new TerminalSize(80, 40);
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
@@ -37,57 +28,31 @@ public class Game {
             screen.startScreen();
             screen.doResizeIfNecessary();
 
+            this.state = new MenuState(new Menu());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    void draw() throws IOException {
-        screen.clear();
-        level.draw(screen.newTextGraphics());
-        screen.refresh();
-    }
 
-    private void processKey(KeyStroke key) {
-
-        if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
-            try { screen.close(); } catch (IOException e) {}
-            System.exit(0);
-        }
-        if (key.getKeyType() == KeyType.EOF) {
-            try { screen.close(); } catch (IOException e) {}
-            System.exit(0);
-        }
-
-        level.processKey(key);
+    public void setState(State state) {
+        this.state = state;
     }
 
     public void run() {
         try {
-            while (true) {
-                draw();
+            while (state!= null) {
+                state.draw(screen, screen.newTextGraphics());
+                screen.refresh();
                 KeyStroke key = screen.readInput();
-                processKey(key);
 
-                if (level.isFinished()) {
-                    currLevelIndex++;
-                    Level nextLevel = levelLoader.loadLevel(currLevelIndex);
-                    if (nextLevel != null) {
-                        this.level = nextLevel;
-                        this.level.initialize();
+                state.step(this,key);
 
-                        screen.clear();
-                    } else {
-
-                        System.out.println("You Won!");
-                        screen.close();
-                        System.exit(0);
-                    }
-                }
-
-                if (key.getKeyType() == KeyType.EOF) break;
             }
-        } catch (IOException e) {
+            screen.close();
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
