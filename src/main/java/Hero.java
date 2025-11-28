@@ -17,6 +17,7 @@ public class Hero extends Element{
     @Override
     public void draw(TextGraphics graphics) {
         graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#2C1A0B"));
         graphics.enableModifiers(SGR.BOLD);
         graphics.putString(new TerminalPosition(position.getX(), position.getY()), "X");
     }

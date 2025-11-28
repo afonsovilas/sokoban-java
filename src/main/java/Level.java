@@ -33,7 +33,14 @@ public class Level {
     }
 
     public void loadLevel(String[] levelDesign) {
-        this.width = levelDesign[0].length();
+        int maxWidth = 0;
+        for (String line : levelDesign) {
+            if (line.length() > maxWidth) {
+                maxWidth = line.length();
+            }
+        }
+
+        this.width = maxWidth;
         this.height = levelDesign.length;
 
         for (int y = 0; y < height; y++) {
@@ -61,17 +68,31 @@ public class Level {
 
 
     public void draw(TextGraphics graphics) {
+        int screenWidth = 80;
+        int screenHeight = 40;
+
+        int offsetX = (screenWidth - width) / 2;
+        int offsetY = (screenHeight - height) / 2;
 
         graphics.setBackgroundColor(TextColor.Factory.fromString("#2C1A0B"));
-        graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
-
+        int borderx = 2;
+        int bordery = 1;
+        graphics.fillRectangle(
+                new TerminalPosition(offsetX - borderx, offsetY - bordery),
+                new TerminalSize(width + (borderx * 2), height + (bordery * 2)),
+                ' '
+        );
+        TextGraphics centeredGraphics = graphics.newTextGraphics(
+                new TerminalPosition(offsetX, offsetY),
+                new TerminalSize(width, height)
+        );
 
         for (Wall wall : walls) {
-            wall.draw(graphics);
+            wall.draw(centeredGraphics);
         }
 
         for (Target target : targets) {
-            target.draw(graphics);
+            target.draw(centeredGraphics);
         }
 
         for (Box box : boxes) {
@@ -84,11 +105,11 @@ public class Level {
                 }
             }
             box.setOnTarget(isOnTarget);
-            box.draw(graphics);
+            box.draw(centeredGraphics);
         }
 
         if (hero != null) {
-            hero.draw(graphics);
+            hero.draw(centeredGraphics);
         }
     }
 
