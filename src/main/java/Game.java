@@ -27,7 +27,7 @@ public class Game {
                 System.exit(1);
             }
 
-            TerminalSize terminalSize = new TerminalSize(level.getWidth(), level.getHeight());
+            TerminalSize terminalSize = new TerminalSize(80, 40);
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
                     .setInitialTerminalSize(terminalSize);
             Terminal terminal = terminalFactory.createTerminal();
@@ -76,7 +76,6 @@ public class Game {
                         this.level = nextLevel;
                         this.level.initialize();
 
-                        screen.doResizeIfNecessary();
                         screen.clear();
                     } else {
 
