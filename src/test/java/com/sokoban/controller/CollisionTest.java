@@ -1,3 +1,5 @@
+package com.sokoban.controller;
+
 import com.sokoban.controller.Collision;
 import com.sokoban.model.Box;
 import com.sokoban.model.Level;

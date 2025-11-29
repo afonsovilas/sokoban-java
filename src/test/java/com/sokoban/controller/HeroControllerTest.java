@@ -1,3 +1,5 @@
+package com.sokoban.controller;
+
 import com.sokoban.controller.Collision;
 import com.sokoban.controller.HeroController;
 import com.sokoban.model.Box;

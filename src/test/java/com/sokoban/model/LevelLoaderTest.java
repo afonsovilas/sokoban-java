@@ -1,3 +1,5 @@
+package com.sokoban.model;
+
 import com.sokoban.model.Level;
 import com.sokoban.model.LevelLoader;
 import com.sokoban.model.Position;

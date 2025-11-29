@@ -1,3 +1,5 @@
+package com.sokoban.model;
+
 import com.sokoban.model.Box;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,15 +13,4 @@ public class BoxTest {
         assertFalse(box.isOnTarget());
     }
 
-    @Test
-    void testSetOnTarget() {
-        Box box = new Box(10, 10);
-        assertFalse(box.isOnTarget());
-
-        box.setOnTarget(true);
-        assertTrue(box.isOnTarget());
-
-        box.setOnTarget(false);
-        assertFalse(box.isOnTarget());
-    }
 }

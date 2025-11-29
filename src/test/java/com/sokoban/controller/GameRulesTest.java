@@ -1,3 +1,5 @@
+package com.sokoban.controller;
+
 import com.sokoban.model.Box;
 import com.sokoban.controller.GameRules;
 import com.sokoban.model.Level;

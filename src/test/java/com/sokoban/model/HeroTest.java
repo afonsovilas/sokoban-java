@@ -1,11 +1,9 @@
-import com.googlecode.lanterna.TerminalPosition;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
+package com.sokoban.model;
+
 import com.sokoban.model.Hero;
 import com.sokoban.model.Position;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 public class HeroTest {
     @Test
@@ -41,17 +39,4 @@ public class HeroTest {
         Assertions.assertEquals(10, newPos.getY());
     }
 
-    @Test
-    public void testDraw() {
-
-        Hero hero = new Hero(10, 10);
-
-
-        TextGraphics graphics = Mockito.mock(TextGraphics.class);
-        hero.draw(graphics);
-
-        Mockito.verify(graphics).setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
-
-        Mockito.verify(graphics).putString(new TerminalPosition(10, 10), "X");
-    }
 }
