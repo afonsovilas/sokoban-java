@@ -1,12 +1,8 @@
 package com.sokoban.model;
 
-import com.googlecode.lanterna.TerminalPosition;
-import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.sokoban.controller.Collision;
-import com.sokoban.states.GameRules;
+import com.sokoban.controller.GameRules;
 import com.sokoban.controller.HeroController;
 
 import java.util.ArrayList;
@@ -85,10 +81,25 @@ public class Level {
 
         if (direction != null) {
             controller.moveHero(direction);
+            updateBoxStates();
             if (gameRules.checkWin(this)) {
                 this.isFinished = true;
-                System.out.println("com.sokoban.model.Level Passesd!");
+                System.out.println("Level Passed!");
             }
+        }
+    }
+
+    private void updateBoxStates() {
+        for (Box box : boxes) {
+            boolean isOnTarget = false;
+
+            for (Target target : targets) {
+                if (box.getPosition().equals(target.getPosition())) {
+                    isOnTarget = true;
+                    break;
+                }
+            }
+            box.setOnTarget(isOnTarget);
         }
     }
 

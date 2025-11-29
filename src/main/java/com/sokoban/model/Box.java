@@ -1,9 +1,5 @@
 package com.sokoban.model;
 
-import com.googlecode.lanterna.TerminalPosition;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
-
 public class Box extends Element {
     private boolean onTarget;
 
@@ -20,13 +16,4 @@ public class Box extends Element {
         return onTarget;
     }
 
-    @Override
-    public void draw(TextGraphics graphics) {
-        if (onTarget) {
-            graphics.setForegroundColor(TextColor.Factory.fromString("#00FF00"));
-        } else {
-            graphics.setForegroundColor(TextColor.Factory.fromString("#3399CC"));
-        }
-        graphics.putString(new TerminalPosition(position.getX(), position.getY()), "O");
-    }
 }

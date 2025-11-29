@@ -1,4 +1,4 @@
-package com.sokoban.states;
+package com.sokoban.controller;
 
 import com.sokoban.model.Level;
 import com.sokoban.model.Box;

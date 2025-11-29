@@ -1,20 +1,9 @@
 package com.sokoban.model;
 
-import com.googlecode.lanterna.TerminalPosition;
-import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.graphics.TextGraphics;
-
 public class Wall extends Element {
 
     public Wall(int x, int y) {
         super(x,y);
-    }
-    @Override
-    public void draw(TextGraphics graphics) {
-
-        graphics.setForegroundColor(TextColor.Factory.fromString("#8B4513"));
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#2C1A0B"));
-        graphics.putString(new TerminalPosition(position.getX(), position.getY()), "#");
     }
 
 }
