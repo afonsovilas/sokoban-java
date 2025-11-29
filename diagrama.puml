@@ -1,114 +1,111 @@
 @startuml
-
-' Configuração visual para ficar parecido com diagramas standard
 skinparam classAttributeIconSize 0
 skinparam linetype ortho
 
-package "App Launcher" {
+package "com.sokoban" {
     class Application {
-        + {static} main(args : String[])
+        + main()
     }
-}
-
-package "Game Core" {
     class Game {
         - screen : Screen
-        - level : Level
-        + Game()
-        + run() : void
-        - processKey(key : KeyStroke) : void
-        - draw() : void
+        - state : State
+        + run()
+        + setState(state : State)
     }
 }
 
-package "Model" {
-
-    class Position {
-        - x : int
-        - y : int
-        + Position(x: int, y: int)
-        + getX() : int
-        + getY() : int
-        + equals(o : Object) : boolean
+package "com.sokoban.states" {
+    abstract class State<T> {
+        - model : T
+        + step(game: Game, key: KeyStroke)
+        + draw(screen: Screen, graphics: TextGraphics)
     }
+    class MenuState
+    class GameState
+}
 
-    abstract class Element {
-        # position : Position
-        + Element(x: int, y: int)
-        + getPosition() : Position
-        + {abstract} draw(graphics : TextGraphics) : void
+package "com.sokoban.model" {
+    class Menu {
+        - entries : List<String>
     }
+    class Level {
+        - width : int
+        - height : int
+        - walls : List<Wall>
+        - boxes : List<Box>
+        - targets : List<Target>
+    }
+    class LevelLoader
+    class ElementCreation
+}
 
-    class Hero {
-        + Hero(x: int, y: int)
-        + draw(graphics : TextGraphics) : void
-    }
+package "com.sokoban.model.game.elements" {
+    abstract class Element
+    class Hero
+    class Box
+    class Wall
+    class Target
+}
 
-    class Wall {
-        + Wall(x: int, y: int)
-        + draw(graphics : TextGraphics) : void
+package "com.sokoban.viewer" {
+    class MenuViewer
+    class LevelViewer
+    interface ElementViewer<T> {
+        + draw(element: T, graphics: TextGraphics)
     }
+    class HeroViewer
+    class BoxViewer
+    class WallViewer
+    class TargetViewer
+}
 
-    class Box {
-        - onButton : boolean
-        + Box(x: int, y: int)
-        + setOnButton(state : boolean) : void
-        + draw(graphics : TextGraphics) : void
+package "com.sokoban.controller" {
+    class HeroController {
+        + moveHero(direction: Position)
     }
-
-    class Button {
-        + Button(x: int, y: int)
-        + draw(graphics : TextGraphics) : void
-    }
-
-    abstract class Level {
-        # width : int
-        # height : int
-        # hero : Hero
-        # walls : List<Wall>
-        # boxes : List<Box>
-        # buttons : List<Button>
-        + Level(width: int, height: int)
-        # {abstract} createLevel() : void
-        + draw(graphics : TextGraphics) : void
-        + processKey(key : KeyStroke) : void
-        - moveHero(direction : Position) : void
-        - checkWin() : void
-        - isWall(position : Position) : boolean
-        - getBoxAt(position : Position) : Box
-    }
-
-    class Level1 {
-        - {static} LEVEL_DESIGN : String[]
-        + Level1()
-        # createLevel() : void
-    }
+    class GameRules
 }
 
 ' --- RELAÇÕES ---
 
-' Dependência (Application cria Game)
+' Main Game Logic
 Application ..> Game : creates
+Game o-- State : has current
 
-' Composição (Game tem 1 Level)
-Game *-- Level : manages
+' State Pattern
+State <|-- MenuState
+State <|-- GameState
 
-' Herança (Level1 é um Level)
-Level <|-- Level1
+' MVC Links
+MenuState o-- Menu : model
+MenuState o-- MenuViewer : uses
 
-' Composição (Level contém Listas de Elementos)
-Level "1" *-- "1" Hero
-Level "1" *-- "*" Wall
-Level "1" *-- "*" Box
-Level "1" *-- "*" Button
+GameState o-- Level : model
+GameState o-- LevelViewer : uses
 
-' Herança (Elementos específicos herdam de Element)
+' Viewers
+LevelViewer ..> ElementViewer : uses
+ElementViewer <|.. HeroViewer
+ElementViewer <|.. BoxViewer
+ElementViewer <|.. WallViewer
+ElementViewer <|.. TargetViewer
+
+' Elements Inheritance (CORRIGIDO AQUI)
 Element <|-- Hero
-Element <|-- Wall
 Element <|-- Box
-Element <|-- Button
+Element <|-- Wall
+Element <|-- Target
 
-' Associação (Element usa Position)
-Element o-- Position
+' Level Composition
+Level *-- Element : contains
+' (Para ser mais específico, o Level tem listas destes tipos)
+
+' Factory & Loader
+LevelLoader ..> ElementCreation : uses
+LevelLoader ..> Level : creates
+
+' Controllers
+Level --> HeroController : uses
+HeroController --> GameRules : uses
 
 @enduml
