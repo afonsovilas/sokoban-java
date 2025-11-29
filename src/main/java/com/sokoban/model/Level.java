@@ -71,52 +71,6 @@ public class Level {
     }
 
 
-    public void draw(TextGraphics graphics) {
-        int screenWidth = 80;
-        int screenHeight = 40;
-
-        int offsetX = (screenWidth - width) / 2;
-        int offsetY = (screenHeight - height) / 2;
-
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#2C1A0B"));
-        int borderx = 2;
-        int bordery = 1;
-        graphics.fillRectangle(
-                new TerminalPosition(offsetX - borderx, offsetY - bordery),
-                new TerminalSize(width + (borderx * 2), height + (bordery * 2)),
-                ' '
-        );
-        TextGraphics centeredGraphics = graphics.newTextGraphics(
-                new TerminalPosition(offsetX, offsetY),
-                new TerminalSize(width, height)
-        );
-
-        for (Wall wall : walls) {
-            wall.draw(centeredGraphics);
-        }
-
-        for (Target target : targets) {
-            target.draw(centeredGraphics);
-        }
-
-        for (Box box : boxes) {
-            boolean isOnTarget = false;
-
-            for (Target target : targets) {
-                if (box.getPosition().equals(target.getPosition())) {
-                    isOnTarget = true;
-                    break;
-                }
-            }
-            box.setOnTarget(isOnTarget);
-            box.draw(centeredGraphics);
-        }
-
-        if (hero != null) {
-            hero.draw(centeredGraphics);
-        }
-    }
-
     public void processKey(KeyStroke key) {
         if (controller == null) return;
 

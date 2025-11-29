@@ -3,7 +3,7 @@ import com.googlecode.lanterna.input.KeyType;
 import com.sokoban.Game;
 import com.sokoban.states.GameState;
 import com.sokoban.model.Menu;
-import com.sokoban.controller.MenuState;
+import com.sokoban.states.MenuState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

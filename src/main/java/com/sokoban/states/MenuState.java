@@ -1,4 +1,4 @@
-package com.sokoban.controller;
+package com.sokoban.states;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
@@ -11,44 +11,23 @@ import com.sokoban.*;
 import com.sokoban.model.Level;
 import com.sokoban.model.LevelLoader;
 import com.sokoban.model.Menu;
-import com.sokoban.states.GameState;
-import com.sokoban.states.State;
+import com.sokoban.view.MenuViewer;
 
 import java.io.IOException;
 
 public class MenuState extends State<Menu> {
+
+    private final MenuViewer viewer;
+
     public MenuState(Menu model) {
         super(model);
+        this.viewer = new MenuViewer(model);
     }
 
     @Override
     public void draw(Screen screen, TextGraphics graphics) {
         screen.clear();
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
-        graphics.fillRectangle(new TerminalPosition(0, 0), screen.getTerminalSize(), ' ');
-
-        int width = screen.getTerminalSize().getColumns();
-        int height = screen.getTerminalSize().getRows();
-
-        graphics.setForegroundColor(TextColor.ANSI.WHITE);
-        graphics.putString(new TerminalPosition((width - "SOKOBAN GAME".length()) / 2, height / 4), "SOKOBAN GAME");
-
-
-        int totalEntries = getModel().getNumberEntries();
-        int startY = (height - totalEntries) / 2;
-        for (int i = 0; i < getModel().getNumberEntries(); i++) {
-            String entry = getModel().getEntry(i);
-            if (getModel().isSelected(i)) {
-                graphics.enableModifiers(SGR.BOLD);
-                entry = "-> " + entry + " <-";
-            } else {
-                graphics.setForegroundColor(TextColor.ANSI.WHITE);
-                entry = "   " + entry + "   ";
-            }
-            int startX = (width - entry.length()) / 2;
-            graphics.putString(new TerminalPosition(startX, startY + i), entry);
-
-        }
+        viewer.draw(screen, graphics);
     }
 
     @Override

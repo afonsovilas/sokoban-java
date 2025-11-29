@@ -2,7 +2,7 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.sokoban.Game;
 import com.sokoban.states.GameState;
 import com.sokoban.model.Level;
-import com.sokoban.controller.MenuState;
+import com.sokoban.states.MenuState;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
