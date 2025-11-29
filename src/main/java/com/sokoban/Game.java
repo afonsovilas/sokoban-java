@@ -20,29 +20,9 @@ public class Game {
     private State state;
     private GameState savedGame;
 
-    public Game() {
-        try {
-
-            TerminalSize terminalSize = new TerminalSize(80, 40);
-            DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
-                    .setInitialTerminalSize(terminalSize);
-            Font font = new Font("Monospaced", Font.BOLD, 20);
-            terminalFactory.setTerminalEmulatorFontConfiguration(
-                    SwingTerminalFontConfiguration.newInstance(font)
-            );
-
-            Terminal terminal = terminalFactory.createTerminal();
-
-            screen = new TerminalScreen(terminal);
-            screen.setCursorPosition(null);
-            screen.startScreen();
-            screen.doResizeIfNecessary();
-
-            this.state = new MenuState(new Menu());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public Game(Screen screen) {
+        this.screen = screen;
+        this.state = new MenuState(new Menu());
     }
 
 

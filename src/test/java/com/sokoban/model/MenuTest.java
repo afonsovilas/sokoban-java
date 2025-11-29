@@ -1,3 +1,5 @@
+package com.sokoban.model;
+
 import com.sokoban.model.Menu;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

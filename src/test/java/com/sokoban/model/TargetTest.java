@@ -1,3 +1,5 @@
+package com.sokoban.model;
+
 import com.sokoban.model.Target;
 import org.junit.jupiter.api.Test;
 
