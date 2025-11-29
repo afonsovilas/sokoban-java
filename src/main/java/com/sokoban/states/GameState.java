@@ -7,17 +7,19 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.sokoban.*;
-import com.sokoban.controller.MenuState;
 import com.sokoban.model.Level;
 import com.sokoban.model.LevelLoader;
 import com.sokoban.model.Menu;
+import com.sokoban.view.LevelViewer;
 
 public class GameState extends State<Level> {
     private int currIndexLevel;
+    private final LevelViewer levelviewer;
 
     public GameState(Level level, int currIndexLevel) {
         super(level);
         this.currIndexLevel= currIndexLevel;
+        this.levelviewer = new LevelViewer(level);
     }
 
     @Override
@@ -29,7 +31,11 @@ public class GameState extends State<Level> {
                 screen.getTerminalSize(),
                 ' '
         );
-        getModel().draw(graphics);
+        levelviewer.draw(
+                graphics,
+                screen.getTerminalSize().getColumns(),
+                screen.getTerminalSize().getRows()
+        );
     }
 
     @Override

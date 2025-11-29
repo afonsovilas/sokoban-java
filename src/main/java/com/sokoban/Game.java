@@ -10,7 +10,7 @@ import java.awt.Font;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
 import com.sokoban.model.Menu;
 import com.sokoban.states.GameState;
-import com.sokoban.controller.MenuState;
+import com.sokoban.states.MenuState;
 import com.sokoban.states.State;
 
 import java.io.IOException;
