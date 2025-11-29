@@ -1,11 +1,16 @@
+package com.sokoban.states;
+
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
-
-import java.io.IOException;
+import com.sokoban.*;
+import com.sokoban.controller.MenuState;
+import com.sokoban.model.Level;
+import com.sokoban.model.LevelLoader;
+import com.sokoban.model.Menu;
 
 public class GameState extends State<Level> {
     private int currIndexLevel;

@@ -2,13 +2,11 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TerminalPosition;
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
+import com.sokoban.model.Level;
+import com.sokoban.model.Wall;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.*;
 
 class LevelTest {

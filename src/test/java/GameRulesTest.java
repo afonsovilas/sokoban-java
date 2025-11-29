@@ -1,5 +1,9 @@
+import com.sokoban.model.Box;
+import com.sokoban.states.GameRules;
+import com.sokoban.model.Level;
+import com.sokoban.model.Target;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;

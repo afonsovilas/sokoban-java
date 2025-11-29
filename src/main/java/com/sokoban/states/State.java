@@ -1,6 +1,9 @@
+package com.sokoban.states;
+
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.screen.Screen;
+import com.sokoban.Game;
 
 import java.io.IOException;
 

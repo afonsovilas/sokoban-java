@@ -1,17 +1,19 @@
+package com.sokoban;
+
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import java.awt.Font;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
+import com.sokoban.model.Menu;
+import com.sokoban.states.GameState;
+import com.sokoban.controller.MenuState;
+import com.sokoban.states.State;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Game {
     private Screen screen;

@@ -1,9 +1,13 @@
+package com.sokoban.model;
+
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
+import com.sokoban.controller.Collision;
+import com.sokoban.states.GameRules;
+import com.sokoban.controller.HeroController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,7 +133,7 @@ public class Level {
             controller.moveHero(direction);
             if (gameRules.checkWin(this)) {
                 this.isFinished = true;
-                System.out.println("Level Passesd!");
+                System.out.println("com.sokoban.model.Level Passesd!");
             }
         }
     }

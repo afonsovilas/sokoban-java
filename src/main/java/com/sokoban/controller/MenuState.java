@@ -1,3 +1,5 @@
+package com.sokoban.controller;
+
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TextColor;
@@ -5,6 +7,12 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
+import com.sokoban.*;
+import com.sokoban.model.Level;
+import com.sokoban.model.LevelLoader;
+import com.sokoban.model.Menu;
+import com.sokoban.states.GameState;
+import com.sokoban.states.State;
 
 import java.io.IOException;
 

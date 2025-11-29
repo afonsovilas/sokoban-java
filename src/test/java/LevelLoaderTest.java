@@ -1,3 +1,6 @@
+import com.sokoban.model.Level;
+import com.sokoban.model.LevelLoader;
+import com.sokoban.model.Position;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,3 +1,10 @@
+package com.sokoban.controller;
+
+import com.sokoban.model.Level;
+import com.sokoban.model.Position;
+import com.sokoban.model.Box;
+import com.sokoban.model.Wall;
+
 public class Collision {
     private Level level;
 
