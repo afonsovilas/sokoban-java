@@ -6,6 +6,8 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import java.awt.Font;
+import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 public class Game {
     private Screen screen;
     private State state;
+    private GameState savedGame;
 
     public Game() {
         try {
@@ -21,6 +24,11 @@ public class Game {
             TerminalSize terminalSize = new TerminalSize(80, 40);
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
                     .setInitialTerminalSize(terminalSize);
+            Font font = new Font("Monospaced", Font.BOLD, 20);
+            terminalFactory.setTerminalEmulatorFontConfiguration(
+                    SwingTerminalFontConfiguration.newInstance(font)
+            );
+
             Terminal terminal = terminalFactory.createTerminal();
 
             screen = new TerminalScreen(terminal);
@@ -39,6 +47,8 @@ public class Game {
     public void setState(State state) {
         this.state = state;
     }
+    public void saveGameState(GameState gameState) {this.savedGame = gameState;
+    }
 
     public void run() {
         try {
@@ -56,4 +66,7 @@ public class Game {
             e.printStackTrace();
         }
     }
+
+    public GameState getSavedGame() {return savedGame;}
+
 }
