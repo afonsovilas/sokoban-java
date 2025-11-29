@@ -1,3 +1,9 @@
+package com.sokoban.states;
+
+import com.sokoban.model.Level;
+import com.sokoban.model.Box;
+import com.sokoban.model.Target;
+
 import java.util.List;
 
 public class GameRules {

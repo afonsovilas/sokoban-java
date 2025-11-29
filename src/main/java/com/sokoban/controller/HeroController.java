@@ -1,3 +1,9 @@
+package com.sokoban.controller;
+
+import com.sokoban.model.Position;
+import com.sokoban.model.Box;
+import com.sokoban.model.Hero;
+
 public class HeroController {
     private final Hero hero;
     private final Collision collision;

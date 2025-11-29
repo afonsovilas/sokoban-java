@@ -1,3 +1,8 @@
+import com.sokoban.controller.Collision;
+import com.sokoban.model.Box;
+import com.sokoban.model.Level;
+import com.sokoban.model.Position;
+import com.sokoban.model.Wall;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

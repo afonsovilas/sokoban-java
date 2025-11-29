@@ -1,3 +1,5 @@
+package com.sokoban.model;
+
 public class ElementCreation {
     public static Element createElement(char c, int x, int y) {
         switch (c) {

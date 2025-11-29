@@ -1,3 +1,8 @@
+import com.sokoban.controller.Collision;
+import com.sokoban.controller.HeroController;
+import com.sokoban.model.Box;
+import com.sokoban.model.Hero;
+import com.sokoban.model.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
