@@ -1,5 +1,5 @@
 import com.sokoban.model.Box;
-import com.sokoban.states.GameRules;
+import com.sokoban.controller.GameRules;
 import com.sokoban.model.Level;
 import com.sokoban.model.Target;
 import org.junit.jupiter.api.Test;

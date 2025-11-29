@@ -36,23 +36,17 @@ public class LevelViewer {
                 new TerminalSize(level.getWidth(), level.getHeight())
         );
 
-        for (Wall wall : level.getWalls()) wall.draw(centeredGraphics);
-        for (Target target : level.getTargets()) target.draw(centeredGraphics);
+        WallViewer wallViewer = new WallViewer();
+        for (Wall wall : level.getWalls()) wallViewer.draw(wall, centeredGraphics);
 
-        for (Box box : level.getBoxes()) {
-            boolean isOnTarget = false;
-            for (Target target : level.getTargets()) {
-                if (box.getPosition().equals(target.getPosition())) {
-                    isOnTarget = true;
-                    break;
-                }
-            }
-            box.setOnTarget(isOnTarget);
-            box.draw(centeredGraphics);
-        }
+        TargetViewer targetViewer = new TargetViewer();
+        for (Target target : level.getTargets()) targetViewer.draw(target,centeredGraphics);
+
+        BoxViewer boxViewer = new BoxViewer();
+        for (Box box : level.getBoxes())  boxViewer.draw(box,centeredGraphics);
 
         if (level.getHero() != null) {
-            level.getHero().draw(centeredGraphics);
+            new HeroViewer().draw(level.getHero(), centeredGraphics);
         }
     }
 }
