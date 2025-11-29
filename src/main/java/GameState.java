@@ -1,4 +1,6 @@
+import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
+import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -16,6 +18,12 @@ public class GameState extends State<Level> {
     @Override
     public void draw(Screen screen, TextGraphics graphics) {
         screen.clear();
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
+        graphics.fillRectangle(
+                new TerminalPosition(0, 0),
+                screen.getTerminalSize(),
+                ' '
+        );
         getModel().draw(graphics);
     }
 
@@ -24,6 +32,7 @@ public class GameState extends State<Level> {
         if (key == null) return;
 
         if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
+            game.saveGameState(this);
             game.setState(new MenuState(new Menu()));
             return;
         }

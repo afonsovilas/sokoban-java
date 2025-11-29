@@ -19,17 +19,27 @@ public class MenuState extends State<Menu> {
         graphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
         graphics.fillRectangle(new TerminalPosition(0, 0), screen.getTerminalSize(), ' ');
 
-        graphics.setForegroundColor(TextColor.ANSI.WHITE);
-        graphics.putString(new TerminalPosition(10, 5), "SOKOBAN GAME");
+        int width = screen.getTerminalSize().getColumns();
+        int height = screen.getTerminalSize().getRows();
 
+        graphics.setForegroundColor(TextColor.ANSI.WHITE);
+        graphics.putString(new TerminalPosition((width - "SOKOBAN GAME".length()) / 2, height / 4), "SOKOBAN GAME");
+
+
+        int totalEntries = getModel().getNumberEntries();
+        int startY = (height - totalEntries) / 2;
         for (int i = 0; i < getModel().getNumberEntries(); i++) {
+            String entry = getModel().getEntry(i);
             if (getModel().isSelected(i)) {
                 graphics.enableModifiers(SGR.BOLD);
-                graphics.putString(new TerminalPosition(12, 10 + i), "-> " + getModel().getEntry(i));
+                entry = "-> " + entry + " <-";
             } else {
-                graphics.disableModifiers(SGR.BOLD);
-                graphics.putString(new TerminalPosition(12, 10 + i), getModel().getEntry(i));
+                graphics.setForegroundColor(TextColor.ANSI.WHITE);
+                entry = "   " + entry + "   ";
             }
+            int startX = (width - entry.length()) / 2;
+            graphics.putString(new TerminalPosition(startX, startY + i), entry);
+
         }
     }
 
@@ -48,6 +58,9 @@ public class MenuState extends State<Menu> {
                 game.setState(null);
             }
             if (getModel().isSelectedStart()) {
+
+                game.saveGameState(null);
+
                 LevelLoader loader = new LevelLoader();
                 Level firstLevel = loader.loadLevel(1);
 
@@ -55,6 +68,15 @@ public class MenuState extends State<Menu> {
 
                     firstLevel.initialize();
                     game.setState(new GameState(firstLevel, 1));
+                }
+            }
+
+            if (getModel().isSelectedResume()) {
+
+                GameState saved = game.getSavedGame();
+
+                if (saved != null) {
+                    game.setState(saved);
                 }
             }
         }
