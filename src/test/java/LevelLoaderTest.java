@@ -7,22 +7,21 @@ class LevelLoaderTest {
     void testLoadLevel1() {
         LevelLoader loader = new LevelLoader();
         Level level = loader.loadLevel(1);
+        assertNotNull(level, "O nível não foi carregado (ficheiro não encontrado?)");
 
-        assertNotNull(level);
-
-        assertEquals(18, level.getWidth());
-        assertEquals(7, level.getHeight());
+        assertEquals(21, level.getWidth());
+        assertEquals(11, level.getHeight());
 
         assertNotNull(level.getHero());
-        assertEquals(new Position(8, 4), level.getHero().getPosition());
+        assertEquals(new Position(10, 2), level.getHero().getPosition());
 
-        assertEquals(1, level.getBoxes().size());
-        assertEquals(new Position(9, 2), level.getBoxes().get(0).getPosition());
+        assertEquals(4, level.getBoxes().size());
+        assertEquals(new Position(7, 3), level.getBoxes().get(0).getPosition());
+        assertEquals(new Position(11, 8), level.getBoxes().get(3).getPosition());
 
-        assertEquals(1, level.getTargets().size());
-        assertEquals(new Position(12, 3), level.getTargets().get(0).getPosition());
-
-        assertEquals(46, level.getWalls().size());
+        assertEquals(4, level.getTargets().size());
+        assertEquals(new Position(7, 5), level.getTargets().get(0).getPosition());
+        assertEquals(88, level.getWalls().size());
     }
 
     @Test
@@ -30,22 +29,23 @@ class LevelLoaderTest {
         LevelLoader loader = new LevelLoader();
         Level level = loader.loadLevel(2);
 
-        assertEquals(18, level.getWidth());
-        assertEquals(7, level.getHeight());
+        assertNotNull(level, "O nível 2 não foi carregado");
+
+        assertEquals(15, level.getWidth());
+        assertEquals(11, level.getHeight());
 
         assertNotNull(level.getHero());
-        assertEquals(new Position(9, 4), level.getHero().getPosition());
+        assertEquals(new Position(7, 6), level.getHero().getPosition());
 
-        assertEquals(2, level.getBoxes().size());
+        assertEquals(5, level.getBoxes().size());
 
-        assertEquals(new Position(10, 2), level.getBoxes().get(0).getPosition());
-        assertEquals(new Position(3, 4), level.getBoxes().get(1).getPosition());
-        assertEquals(2, level.getTargets().size());
+        assertEquals(new Position(4, 4), level.getBoxes().get(0).getPosition());
+        assertEquals(new Position(7, 4), level.getBoxes().get(1).getPosition());
+        assertEquals(new Position(10, 4), level.getBoxes().get(2).getPosition());
 
-        assertEquals(new Position(3, 2), level.getTargets().get(0).getPosition());
-        assertEquals(new Position(12, 3), level.getTargets().get(1).getPosition());
-
-        assertEquals(46, level.getWalls().size());
+        assertEquals(5, level.getTargets().size());
+        assertEquals(new Position(4, 2), level.getTargets().get(0).getPosition());
+        assertEquals(55, level.getWalls().size());
     }
 
     @Test
