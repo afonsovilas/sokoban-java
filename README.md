@@ -34,11 +34,14 @@ Reset Level: Functionality to instantly restart the current level.
 
 High Scores: Saving the best performance (fewest steps) for each level.
 
-Addicional Powers like:
+Additional Powers like:
+
 -SuperPower : Allow the player do move 2 Boxes at the same time.
--Portals: Allow the player and boxes to teleport to a diferente location inside the map.
+
+-Portals: Allow the player and boxes to teleport to a different location inside the map.
 
 Screenshots
+
 The following screenshots illustrate the general look of our game:
 
 Menu
@@ -117,3 +120,5 @@ Refactoring Performed:
 Separation of View and Model: Initially, game elements (like Hero or Wall) contained their own draw() methods. We refactored this by extracting the drawing logic into specific viewer classes (HeroViewer, WallViewer) implementing the ElementViewer interface. This eliminated the dependency on the GUI library (Lanterna) from the Model layer.
 
 Class decomposition: The Level class initially handled loading, logic, and drawing. We extracted LevelLoader for file operations and LevelViewer for rendering, leaving Level responsible only for holding the data.
+
+Tests using JUnit 5 and Mockito: Mockito was crucial to test the classes, allowing us to simulate specific game scenarios (like pushing boxes into walls) without needing to instantiate the full game environment or depend on the GUI.
