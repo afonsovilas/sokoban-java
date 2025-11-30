@@ -1,6 +1,6 @@
-LDTS_T13_G07 - SOKOBAN
+ ## LDTS_T13_G07 - SOKOBAN
 
-GAME DESCRIPTION
+ ### GAME DESCRIPTION
 
 This project is a Java-based implementation of the classic puzzle game Sokoban. The player controls a warehouse keeper whose goal is to push boxes to specific storage locations (targets). The game challenges the player's logical thinking and spatial awareness, as boxes can only be pushed (never pulled) and walls restrict movement.
 
@@ -8,7 +8,7 @@ The game features a level system that increases in difficulty, a main menu for n
 
 This project was developed by Martim Ferreira (up202403764@up.pt) and Afonso Vilas (up202403577@up.pt) for LDTS 2024-25.
 
-Implemented Features
+ ### Implemented Features
 
 Main Menu: A navigational entry point that allows the player to start the game or exit the application.
 
@@ -24,7 +24,7 @@ Win Condition: The level is completed when all boxes are placed on top of target
 
 Visual Feedback: Elements have distinct colors, and boxes change color (Green) when placed correctly on a target.
 
-Planned Features
+ ### Planned Features
 
 Undo System: Implementation of the Command Pattern to allow players to reverse their last move.
 
@@ -36,11 +36,11 @@ High Scores: Saving the best performance (fewest steps) for each level.
 
 Additional Powers like:
 
--SuperPower : Allow the player do move 2 Boxes at the same time.
+-SuperPower : Allow the player to move 2 Boxes at the same time.
 
 -Portals: Allow the player and boxes to teleport to a different location inside the map.
 
-Screenshots
+ ### Screenshots
 
 The following screenshots illustrate the general look of our game:
 
@@ -48,7 +48,7 @@ Menu
 <p align="center" justify="center"> <img src="docs/images/screenshots/Menu.png"/> </p> <p align="center"> <b><i>Fig 1. Main Menu with options</i></b> </p>
 
 Gameplay
-<p align="center" justify="center"> <img src="docs/images/screenshots/gameplay.png"/> </p> <p align="center"> <b><i>Fig 2. Visual feedback when boxes are on targetst</i></b> </p>
+<p align="center" justify="center"> <img src="docs/images/screenshots/gameplay.png"/> </p> <p align="center"> <b><i>Fig 2. Visual feedback when boxes are on targets</i></b> </p>
 
 Mockups (Current and future Features)
 To guide the development of future features, we designed mockups illustrating the User Interface flow and new mechanics.
@@ -61,17 +61,17 @@ To guide the development of future features, we designed mockups illustrating th
 </p>
 
 Design Decisions shown in Mockups:
--Step Counter:** To introduce a resource management challenge.
--Reset Button:** Reset the current Level.
--Powers & Portals:** New puzzle elements to increase complexity in later levels.
--Level Selection:** A grid menu to allow players to replay specific levels.
--Score Board:** To save and display the best performance (High Scores).
+- **Step Counter:** To introduce a resource management challenge.
+- **Reset Button:** Reset the current Level.
+- **Powers & Portals:** New puzzle elements to increase complexity in later levels.
+- **Level Selection:** A grid menu to allow players to replay specific levels.
+- **Score Board:** To save and display the best performance (High Scores).
 
-GAME DOCUMENTATION
+ ## GAME DOCUMENTATION
 
-Architecture and Design Patterns
+ ### Architecture and Design Patterns
 
-1. Architectural Pattern: Model-View-Controller (MVC)
+ ### 1. Architectural Pattern: Model-View-Controller (MVC)
 
 The project is structured according to the Model-View-Controller (MVC) architectural pattern to ensure a clear separation of concerns. This structure is evident in the package organization defined in our UML:
 
@@ -81,9 +81,11 @@ View (com.sokoban.viewer): Responsible for displaying the data on the screen. Cl
 
 Controller (com.sokoban.controller & com.sokoban.states): Handles user input and updates the model. HeroController processes movement logic and collisions , while MenuState and GameState manage the application flow and input delegation.
 
-2. Design Patterns
+ ### 2. Design Patterns
    
--State Pattern
+ #### Current Design Patterns
+
+ ##### -State Pattern
 
 Problem: The game has distinct behaviors depending on the current context (e.g., navigating the Menu uses different logic than controlling the Hero in the Game). Managing these contexts with simple conditional statements in the main loop would lead to unmaintainable code.
 
@@ -95,7 +97,7 @@ Consequences:
 
 ( + ) Encapsulates state-specific behavior, keeping the main loop clean.
 
--Factory Pattern (Simple Factory)
+ ##### -Factory Pattern (Simple Factory)
 
 Problem: When loading a level from a text file, the application reads characters (e.g., '#', 'X') and needs to instantiate the corresponding objects (Wall, Hero). Placing this instantiation logic directly inside the LevelLoader would violate the Single Responsibility Principle and create high coupling.
 
@@ -107,13 +109,39 @@ Consequences:
 
 ( + ) Decouples the file parsing logic from the object instantiation logic.
 
-3. UML Class Diagram
+ #### Planned Design Patterns
+
+ ##### -Command Pattern
+
+Problem: Implementing an "Undo" feature is difficult if movement logic is hardcoded. We need a way to store the history of actions performed by the player to reverse them later.
+
+Solution: We plan to encapsulate all game actions (e.g., `MoveUp`, `PushBox`) as command objects. These objects will be stored in a stack history. When the player requests an "Undo", the game pops the last command from the stack and executes its `undo()` method.
+
+Consequences:
+
+( + ) Allows for infinite undo functionality.
+
+( + ) Decouples the object that invokes the operation from the one that knows how to perform it.
+
+ ##### -Strategy Pattern
+
+Problem: The game features different movement mechanics, such as the "SuperPower" allowing the player to push multiple boxes at the same time. Using complex `if-else` statements inside the Hero class to check for active powers would make the code rigid and hard to extend.
+
+Solution: We plan to define a `MovementStrategy` interface. The Hero will hold a reference to a specific strategy (e.g., `NormalPushStrategy`, `SuperPushStrategy`). When a power-up is collected, we simply swap the strategy object at runtime.
+
+Consequences:
+
+( + ) New powers can be added easily by creating new Strategy classes.
+
+( + ) Allows switching movement behavior dynamically at runtime without changing the Hero class.
+
+ ### 3. UML Class Diagram
 
 The following class diagram illustrates the project structure, we used the PlantUML plugin to generate it.
 
 <p align="center" justify="center"> <img src="docs/images/uml.png"/> </p> <p align="center"> <b><i>Fig 4. UML Class Diagram showing the MVC structure and patterns.</i></b> </p>
 
-4. Code Smells and Refactoring
+ ### 4. Code Smells and Refactoring
 
 Refactoring Performed:
 
