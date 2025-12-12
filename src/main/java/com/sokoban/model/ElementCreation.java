@@ -7,6 +7,7 @@ public class ElementCreation {
             case 'O': return new Box(x, y);
             case '*': return new Target(x, y);
             case 'X': return new Hero(x, y);
+            case 'P': return new Portal(x,y);
             default:  return null;
         }
     }

@@ -1,9 +1,6 @@
 package com.sokoban.controller;
 
-import com.sokoban.model.Level;
-import com.sokoban.model.Position;
-import com.sokoban.model.Box;
-import com.sokoban.model.Wall;
+import com.sokoban.model.*;
 
 public class Collision {
     private Level level;
@@ -25,6 +22,24 @@ public class Collision {
         for (Box box : level.getBoxes()) {
             if (box.getPosition().equals(position)) {
                 return box;
+            }
+        }
+        return null;
+    }
+
+    public Portal getPortalAt(Position position) {
+        for (Portal portal : level.getPortals()) {
+            if (portal.getPosition().equals(position)) {
+                return portal;
+            }
+        }
+        return null;
+    }
+
+    public Portal getOtherPortal(Portal currentPortal) {
+        for (Portal p : level.getPortals()) {
+            if (!p.getPosition().equals(currentPortal.getPosition())) {
+                return p;
             }
         }
         return null;

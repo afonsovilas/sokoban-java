@@ -1,5 +1,6 @@
 package com.sokoban.controller;
 
+import com.sokoban.model.Portal;
 import com.sokoban.model.Position;
 import com.sokoban.model.Box;
 import com.sokoban.model.Hero;
@@ -24,6 +25,14 @@ public class HeroController {
         if (box != null) {
             if (!pushBox(box, direction)) {
                 return;
+            }
+        }
+
+        Portal portal = collision.getPortalAt(targetPos);
+        if (portal != null) {
+            Portal destination = collision.getOtherPortal(portal);
+            if (destination != null && collision.getBoxAt(destination.getPosition()) == null) {
+                targetPos = destination.getPosition();
             }
         }
         hero.setPosition(targetPos);
