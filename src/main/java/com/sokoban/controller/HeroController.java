@@ -42,6 +42,25 @@ public class HeroController {
         Position boxPos = box.getPosition();
         Position boxTargetPos = new Position(boxPos.getX() + direction.getX(), boxPos.getY() + direction.getY());
 
+        Portal portal = collision.getPortalAt(boxTargetPos);
+
+        if (portal != null) {
+            Portal destination = collision.getOtherPortal(portal);
+
+            if (destination != null) {
+                Position exitPos = new Position(
+                        destination.getPosition().getX() + direction.getX(),
+                        destination.getPosition().getY() + direction.getY()
+                );
+
+                if (collision.isFree(exitPos)) {
+                    boxTargetPos = exitPos;
+                } else {
+                    return false;
+                }
+            }
+        }
+
         if (!collision.isFree(boxTargetPos)) {
             return false;
         }
