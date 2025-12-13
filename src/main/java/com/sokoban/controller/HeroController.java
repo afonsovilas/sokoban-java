@@ -1,5 +1,6 @@
 package com.sokoban.controller;
 
+import com.sokoban.model.Portal;
 import com.sokoban.model.Position;
 import com.sokoban.model.Box;
 import com.sokoban.model.Hero;
@@ -26,12 +27,39 @@ public class HeroController {
                 return;
             }
         }
+
+        Portal portal = collision.getPortalAt(targetPos);
+        if (portal != null) {
+            Portal destination = collision.getOtherPortal(portal);
+            if (destination != null && collision.getBoxAt(destination.getPosition()) == null) {
+                targetPos = destination.getPosition();
+            }
+        }
         hero.setPosition(targetPos);
     }
 
     private boolean pushBox(Box box, Position direction) {
         Position boxPos = box.getPosition();
         Position boxTargetPos = new Position(boxPos.getX() + direction.getX(), boxPos.getY() + direction.getY());
+
+        Portal portal = collision.getPortalAt(boxTargetPos);
+
+        if (portal != null) {
+            Portal destination = collision.getOtherPortal(portal);
+
+            if (destination != null) {
+                Position exitPos = new Position(
+                        destination.getPosition().getX() + direction.getX(),
+                        destination.getPosition().getY() + direction.getY()
+                );
+
+                if (collision.isFree(exitPos)) {
+                    boxTargetPos = exitPos;
+                } else {
+                    return false;
+                }
+            }
+        }
 
         if (!collision.isFree(boxTargetPos)) {
             return false;

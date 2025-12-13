@@ -4,10 +4,7 @@ import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import com.sokoban.model.Level;
-import com.sokoban.model.Box;
-import com.sokoban.model.Target;
-import com.sokoban.model.Wall;
+import com.sokoban.model.*;
 
 public class LevelViewer {
     private final Level level;
@@ -44,6 +41,9 @@ public class LevelViewer {
 
         BoxViewer boxViewer = new BoxViewer();
         for (Box box : level.getBoxes())  boxViewer.draw(box,centeredGraphics);
+
+        PortalViewer portalViewer = new PortalViewer();
+        for (Portal portal : level.getPortals()) portalViewer.draw(portal,centeredGraphics);
 
         if (level.getHero() != null) {
             new HeroViewer().draw(level.getHero(), centeredGraphics);

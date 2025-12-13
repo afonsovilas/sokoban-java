@@ -18,6 +18,7 @@ public class Level {
     protected List<Wall> walls;
     protected List<Box> boxes;
     protected List<Target> targets;
+    protected List<Portal> portals;
     protected GameRules gameRules;
     protected HeroController controller;
     protected Collision collision;
@@ -29,6 +30,7 @@ public class Level {
         this.walls = new ArrayList<>();
         this.boxes = new ArrayList<>();
         this.targets = new ArrayList<>();
+        this.portals = new ArrayList<>();
         this.gameRules = new GameRules();
     }
 
@@ -56,6 +58,7 @@ public class Level {
                     else if (element instanceof Box) boxes.add((Box) element);
                     else if (element instanceof Hero) hero = (Hero) element;
                     else if (element instanceof Target) targets.add((Target) element);
+                    else if (element instanceof Portal) portals.add((Portal) element);
                 }
             }
         }
@@ -109,6 +112,7 @@ public class Level {
     public List<Wall> getWalls() { return walls; }
     public List<Box> getBoxes() { return boxes; }
     public List<Target> getTargets() { return targets; }
+    public List<Portal> getPortals() { return portals; }
     public boolean isFinished() {return isFinished; }
 
 }
