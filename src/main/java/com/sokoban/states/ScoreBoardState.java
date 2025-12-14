@@ -29,7 +29,7 @@ public class ScoreBoardState extends State<Map<Integer, Integer>> {
     public void step(Game game, KeyStroke key) throws IOException {
         if (key == null) return;
 
-        if (key.getKeyType() == KeyType.Enter || key.getKeyType() == KeyType.Escape) {
+        if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'q' || key.getCharacter() == 'Q')) {
             game.setState(new MenuState(new Menu(false)));
         }
     }

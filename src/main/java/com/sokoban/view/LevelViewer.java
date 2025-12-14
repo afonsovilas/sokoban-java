@@ -68,7 +68,7 @@ public class LevelViewer {
         String helpText = "[Q] MENU   [R] RESET";
 
         graphics.putString(
-                new TerminalPosition((screenWidth - helpText.length()) / 2, screenHeight - 5),
+                new TerminalPosition((screenWidth - helpText.length()) / 2, screenHeight - 8),
                 helpText
         );
     }
