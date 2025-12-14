@@ -16,7 +16,6 @@ public class ScoreBoardViewer {
     }
 
     public void draw(Screen screen, TextGraphics graphics) {
-        // 1. Fundo (Mesmo do Menu)
         graphics.setBackgroundColor(TextColor.Factory.fromString("#3E2723"));
         graphics.fillRectangle(new TerminalPosition(0, 0), screen.getTerminalSize(), ' ');
 
@@ -24,12 +23,12 @@ public class ScoreBoardViewer {
         int height = screen.getTerminalSize().getRows();
 
         String title = "HIGHEST SCORES";
-        graphics.setForegroundColor(TextColor.Factory.fromString("#FFD700")); // Dourado
+        graphics.setForegroundColor(TextColor.Factory.fromString("#FFD700"));
         graphics.enableModifiers(SGR.BOLD);
         graphics.putString(new TerminalPosition((width - title.length()) / 2, height / 4), title);
 
         graphics.disableModifiers(SGR.BOLD);
-        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFFFF")); // Branco
+        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
 
         int startY = (height / 4) + 4;
 
