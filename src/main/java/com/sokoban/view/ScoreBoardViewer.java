@@ -44,8 +44,8 @@ public class ScoreBoardViewer {
             }
         }
 
-        String exitMsg = "Press Enter/Escape to go back";
+        String exitMsg = "Press Q to go back";
         graphics.setForegroundColor(TextColor.Factory.fromString("#D7CCC8"));
-        graphics.putString(new TerminalPosition((width - exitMsg.length()) / 2, height - 4), exitMsg);
+        graphics.putString(new TerminalPosition((width - exitMsg.length()) / 2, height - 10), exitMsg);
     }
 }
