@@ -8,12 +8,12 @@ import com.sokoban.model.Box;
 public class BoxViewer implements ElementViewer<Box> {
     @Override
     public void draw(Box box, TextGraphics graphics) {
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#2C1A0B"));
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#3E2723"));
         if (box.isOnTarget()) {
-            graphics.setForegroundColor(TextColor.Factory.fromString("#00FF00"));
+            graphics.setForegroundColor(TextColor.Factory.fromString("#76FF03"));
         } else {
-            graphics.setForegroundColor(TextColor.Factory.fromString("#3399CC"));
+            graphics.setForegroundColor(TextColor.Factory.fromString("#FF6D00"));
         }
-        graphics.putString(new TerminalPosition(box.getPosition().getX(), box.getPosition().getY()), "O");
+        graphics.putString(new TerminalPosition(box.getPosition().getX(), box.getPosition().getY()), "\u25A3");
     }
 }

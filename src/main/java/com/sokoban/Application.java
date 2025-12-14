@@ -15,7 +15,7 @@ public class Application {
         try {
             TerminalSize terminalSize = new TerminalSize(80, 40);
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory()
-                    .setInitialTerminalSize(terminalSize);
+                    .setInitialTerminalSize(terminalSize).setTerminalEmulatorTitle("Sokoban");
             Font font = new Font("Monospaced", Font.BOLD, 20);
             terminalFactory.setTerminalEmulatorFontConfiguration(
                     SwingTerminalFontConfiguration.newInstance(font)

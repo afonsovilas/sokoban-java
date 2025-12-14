@@ -17,14 +17,14 @@ public class MenuViewer {
 
     public void draw(Screen screen, TextGraphics graphics) {
 
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#3E2723"));
         graphics.fillRectangle(new TerminalPosition(0, 0), screen.getTerminalSize(), ' ');
 
         int width = screen.getTerminalSize().getColumns();
         int height = screen.getTerminalSize().getRows();
 
         String title = "SOKOBAN GAME";
-        graphics.setForegroundColor(TextColor.ANSI.WHITE);
+        graphics.setForegroundColor(TextColor.Factory.fromString("#4DD0E1"));
         graphics.enableModifiers(SGR.BOLD);
         graphics.putString(new TerminalPosition((width - title.length()) / 2, height / 4), title);
 
@@ -35,10 +35,12 @@ public class MenuViewer {
             String entry = menu.getEntry(i);
 
             if (menu.isSelected(i)) {
+                graphics.setForegroundColor(TextColor.Factory.fromString("#FF9800"));
                 graphics.enableModifiers(SGR.BOLD);
                 entry = "-> " + entry + " <-";
             } else {
-                graphics.setForegroundColor(TextColor.ANSI.WHITE);
+                graphics.setForegroundColor(TextColor.Factory.fromString("#D7CCC8"));
+                graphics.disableModifiers(SGR.BOLD);
                 entry = "   " + entry + "   ";
             }
 

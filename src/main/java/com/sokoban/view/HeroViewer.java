@@ -9,9 +9,9 @@ import com.sokoban.model.Hero;
 public class HeroViewer implements ElementViewer<Hero> {
     @Override
     public void draw(Hero hero, TextGraphics graphics) {
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#2C1A0B"));
-        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFF33"));
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#3E2723"));
+        graphics.setForegroundColor(TextColor.Factory.fromString("#FFD700"));
         graphics.enableModifiers(SGR.BOLD);
-        graphics.putString(new TerminalPosition(hero.getPosition().getX(), hero.getPosition().getY()), "X");
+        graphics.putString(new TerminalPosition(hero.getPosition().getX(), hero.getPosition().getY()), "@");
     }
 }

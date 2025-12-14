@@ -22,7 +22,7 @@ public class Game {
 
     public Game(Screen screen) {
         this.screen = screen;
-        this.state = new MenuState(new Menu());
+        this.state = new MenuState(new Menu(false));
     }
 
 
