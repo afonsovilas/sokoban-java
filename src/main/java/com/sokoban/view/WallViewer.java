@@ -9,8 +9,8 @@ import com.sokoban.model.Wall;
 public class WallViewer implements ElementViewer<Wall> {
     @Override
     public void draw(Wall wall, TextGraphics graphics) {
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#2C1A0B"));
-        graphics.setForegroundColor(TextColor.Factory.fromString("#8B4513"));
-        graphics.putString(new TerminalPosition(wall.getPosition().getX(), wall.getPosition().getY()), "#");
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#8D6E63"));
+        graphics.setForegroundColor(TextColor.Factory.fromString("#4E342E"));
+        graphics.putString(new TerminalPosition(wall.getPosition().getX(), wall.getPosition().getY()), " ");
     }
 }

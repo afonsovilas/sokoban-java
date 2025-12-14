@@ -8,9 +8,9 @@ public class PowerUpViewer implements ElementViewer<PowerUp> {
 
     @Override
     public void draw(PowerUp powerUp, TextGraphics graphics) {
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#FFD700"));
-        graphics.setForegroundColor(TextColor.Factory.fromString("#000000"));
-        graphics.putString(powerUp.getPosition().getX(), powerUp.getPosition().getY(), "$");
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#3E2723"));
+        graphics.setForegroundColor(TextColor.Factory.fromString("#FFD700"));
+        graphics.putString(powerUp.getPosition().getX(), powerUp.getPosition().getY(), "\u26A1");
     }
 
 }

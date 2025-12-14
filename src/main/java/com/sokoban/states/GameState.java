@@ -25,7 +25,7 @@ public class GameState extends State<Level> {
     @Override
     public void draw(Screen screen, TextGraphics graphics) {
         screen.clear();
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#3E2723"));
         graphics.fillRectangle(
                 new TerminalPosition(0, 0),
                 screen.getTerminalSize(),

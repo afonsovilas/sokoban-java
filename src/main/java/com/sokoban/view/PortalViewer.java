@@ -9,9 +9,9 @@ import com.sokoban.model.Portal;
 public class PortalViewer implements ElementViewer<Portal> {
     @Override
     public void draw(Portal portal, TextGraphics graphics) {
-        graphics.setBackgroundColor(TextColor.Factory.fromString("#2C1A0B"));
-        graphics.setForegroundColor(TextColor.Factory.fromString("#9932CC"));
+        graphics.setBackgroundColor(TextColor.Factory.fromString("#3E2723"));
+        graphics.setForegroundColor(TextColor.Factory.fromString("#B388FF"));
         graphics.enableModifiers(SGR.BOLD);
-        graphics.putString(new TerminalPosition(portal.getPosition().getX(), portal.getPosition().getY()), "P");
+        graphics.putString(new TerminalPosition(portal.getPosition().getX(), portal.getPosition().getY()), "\u25CE");
     }
 }
