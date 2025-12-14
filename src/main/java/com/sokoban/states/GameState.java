@@ -10,6 +10,7 @@ import com.sokoban.*;
 import com.sokoban.model.Level;
 import com.sokoban.model.LevelLoader;
 import com.sokoban.model.Menu;
+import com.sokoban.utils.ScoreManager;
 import com.sokoban.view.LevelViewer;
 
 public class GameState extends State<Level> {
@@ -51,6 +52,7 @@ public class GameState extends State<Level> {
         getModel().processKey(key);
 
         if (getModel().isFinished()) {
+            ScoreManager.saveScore(currIndexLevel, getModel().getSteps());
             int nextLevelNumber = currIndexLevel + 1;
             LevelLoader loader = new LevelLoader();
             Level nextLevel = loader.loadLevel(nextLevelNumber);

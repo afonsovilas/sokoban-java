@@ -11,7 +11,7 @@ import java.util.List;
 public class Level {
     protected int width;
     protected int height;
-
+    private int steps = 0;
     private boolean isFinished = false;
 
     protected Hero hero;
@@ -85,11 +85,14 @@ public class Level {
         }
 
         if (direction != null) {
+            Position before = hero.getPosition();
             controller.moveHero(direction);
+            if (!hero.getPosition().equals(before)) {
+                this.steps++;
+            }
             updateBoxStates();
             if (gameRules.checkWin(this)) {
                 this.isFinished = true;
-                System.out.println("Level Passed!");
             }
         }
     }
@@ -117,7 +120,7 @@ public class Level {
     public List<Portal> getPortals() { return portals; }
     public boolean isFinished() {return isFinished; }
     public List<PowerUp> getPowerUps() { return powerUps; }
-
+    public int getSteps() { return steps; }
     public void removePowerUp(PowerUp p) {
         powerUps.remove(p);
     }

@@ -11,6 +11,7 @@ import com.sokoban.*;
 import com.sokoban.model.Level;
 import com.sokoban.model.LevelLoader;
 import com.sokoban.model.Menu;
+import com.sokoban.utils.ScoreManager;
 import com.sokoban.view.MenuViewer;
 
 import java.io.IOException;
@@ -65,6 +66,10 @@ public class MenuState extends State<Menu> {
                 if (saved != null) {
                     game.setState(saved);
                 }
+            }
+
+            if (getModel().isSelectedScoreBoard()) {
+                game.setState(new ScoreBoardState(ScoreManager.loadScores()));
             }
         }
     }

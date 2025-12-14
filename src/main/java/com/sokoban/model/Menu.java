@@ -11,11 +11,11 @@ public class Menu {
     public Menu(boolean isPaused) {
         this.isPaused = isPaused;
         if (isPaused) {
-            this.entries = Arrays.asList("Restart Game","Resume", "Exit");
+            this.entries = Arrays.asList("Restart Game","Resume","Score Board", "Exit");
             this.currentSelection = 1;
         }
         else  {
-            this.entries = Arrays.asList("Start Game", "Exit");
+            this.entries = Arrays.asList("Start Game","Score Board", "Exit");
             this.currentSelection = 0;
         }
     }
@@ -53,5 +53,9 @@ public class Menu {
 
     public boolean isSelectedStart() {
         return currentSelection==0;
+    }
+
+    public boolean isSelectedScoreBoard() {
+        return getEntry(currentSelection).equals("Score Board");
     }
 }
