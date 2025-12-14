@@ -1,70 +1,42 @@
 package com.sokoban.controller;
 
-import com.sokoban.model.Portal;
-import com.sokoban.model.Position;
-import com.sokoban.model.Box;
-import com.sokoban.model.Hero;
+import com.sokoban.model.*;
 
 public class HeroController {
     private final Hero hero;
     private final Collision collision;
+    private MovementStrategy strategy;
+    private long powerEndTime = 0;
 
     public HeroController(Hero hero, Collision collision) {
         this.hero = hero;
         this.collision = collision;
+        this.strategy = new NormalMovementStrategy();
     }
 
     public void moveHero(Position direction) {
-        Position currentPos = hero.getPosition();
-        Position targetPos = new Position(currentPos.getX() + direction.getX(), currentPos.getY() + direction.getY());
-        if (collision.isWall(targetPos)) {
-            return;
+        if (System.currentTimeMillis() > powerEndTime && strategy instanceof SuperMovementStrategy) {
+            this.strategy = new NormalMovementStrategy();
+            System.out.println("Super Power Acabou... De volta ao normal.");
         }
 
-        Box box = collision.getBoxAt(targetPos);
-        if (box != null) {
-            if (!pushBox(box, direction)) {
-                return;
-            }
-        }
+        Position nextPos = new Position(
+                hero.getPosition().getX() + direction.getX(),
+                hero.getPosition().getY() + direction.getY()
+        );
 
-        Portal portal = collision.getPortalAt(targetPos);
-        if (portal != null) {
-            Portal destination = collision.getOtherPortal(portal);
-            if (destination != null && collision.getBoxAt(destination.getPosition()) == null) {
-                targetPos = destination.getPosition();
-            }
-        }
-        hero.setPosition(targetPos);
+        collectPowerUp(nextPos);
+        strategy.move(hero, direction, collision);
     }
 
-    private boolean pushBox(Box box, Position direction) {
-        Position boxPos = box.getPosition();
-        Position boxTargetPos = new Position(boxPos.getX() + direction.getX(), boxPos.getY() + direction.getY());
+    private void collectPowerUp(Position position) {
+        PowerUp powerUp = collision.getPowerUpAt(position);
+        if (powerUp != null) {
+            this.strategy = new SuperMovementStrategy();
+            this.powerEndTime = System.currentTimeMillis() + 10000;
 
-        Portal portal = collision.getPortalAt(boxTargetPos);
-
-        if (portal != null) {
-            Portal destination = collision.getOtherPortal(portal);
-
-            if (destination != null) {
-                Position exitPos = new Position(
-                        destination.getPosition().getX() + direction.getX(),
-                        destination.getPosition().getY() + direction.getY()
-                );
-
-                if (collision.isFree(exitPos)) {
-                    boxTargetPos = exitPos;
-                } else {
-                    return false;
-                }
-            }
+            collision.getLevel().removePowerUp(powerUp);
+            System.out.println("SUPER POWER ATIVADO! (Strategy Pattern)");
         }
-
-        if (!collision.isFree(boxTargetPos)) {
-            return false;
-        }
-        box.setPosition(boxTargetPos);
-        return true;
     }
 }

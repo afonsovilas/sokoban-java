@@ -22,7 +22,7 @@ public class Level {
     protected GameRules gameRules;
     protected HeroController controller;
     protected Collision collision;
-
+    protected List<PowerUp> powerUps;
 
     public Level(int width, int height) {
         this.width = width;
@@ -32,6 +32,7 @@ public class Level {
         this.targets = new ArrayList<>();
         this.portals = new ArrayList<>();
         this.gameRules = new GameRules();
+        this.powerUps = new ArrayList<>();
     }
 
     public void loadLevel(String[] levelDesign) {
@@ -59,6 +60,7 @@ public class Level {
                     else if (element instanceof Hero) hero = (Hero) element;
                     else if (element instanceof Target) targets.add((Target) element);
                     else if (element instanceof Portal) portals.add((Portal) element);
+                    else if (element instanceof PowerUp) powerUps.add((PowerUp) element);
                 }
             }
         }
@@ -114,6 +116,10 @@ public class Level {
     public List<Target> getTargets() { return targets; }
     public List<Portal> getPortals() { return portals; }
     public boolean isFinished() {return isFinished; }
+    public List<PowerUp> getPowerUps() { return powerUps; }
 
+    public void removePowerUp(PowerUp p) {
+        powerUps.remove(p);
+    }
 }
 

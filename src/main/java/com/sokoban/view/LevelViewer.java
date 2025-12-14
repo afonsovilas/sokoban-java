@@ -45,6 +45,9 @@ public class LevelViewer {
         PortalViewer portalViewer = new PortalViewer();
         for (Portal portal : level.getPortals()) portalViewer.draw(portal,centeredGraphics);
 
+        PowerUpViewer powerUpViewer = new PowerUpViewer();
+        for (PowerUp powerUp : level.getPowerUps()) powerUpViewer.draw(powerUp,centeredGraphics);
+
         if (level.getHero() != null) {
             new HeroViewer().draw(level.getHero(), centeredGraphics);
         }

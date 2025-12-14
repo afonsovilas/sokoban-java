@@ -45,6 +45,16 @@ public class Collision {
         return null;
     }
 
+    public PowerUp getPowerUpAt(Position position) {
+        for (PowerUp p : level.getPowerUps()) {
+            if (p.getPosition().equals(position)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public Level getLevel() { return level; }
     public boolean isFree(Position position) {
         return !isWall(position) && getBoxAt(position) == null;
     }
