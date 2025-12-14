@@ -1,5 +1,6 @@
 package com.sokoban.view;
 
+import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextColor;
@@ -27,6 +28,15 @@ public class LevelViewer {
                 ' '
         );
 
+        graphics.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
+        graphics.enableModifiers(SGR.BOLD);
+
+        String stepText = "Steps: " + level.getSteps();
+        graphics.putString(
+                new TerminalPosition(offsetX + level.getWidth() - stepText.length() + borderX, offsetY - borderY - 2),
+                stepText
+        );
+        graphics.disableModifiers(SGR.BOLD);
 
         TextGraphics centeredGraphics = graphics.newTextGraphics(
                 new TerminalPosition(offsetX, offsetY),
