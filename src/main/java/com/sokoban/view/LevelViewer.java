@@ -61,5 +61,15 @@ public class LevelViewer {
         if (level.getHero() != null) {
             new HeroViewer().draw(level.getHero(), centeredGraphics);
         }
+
+        graphics.setForegroundColor(TextColor.Factory.fromString("#D7CCC8"));
+        graphics.disableModifiers(SGR.BOLD);
+
+        String helpText = "[Q] MENU   [R] RESET";
+
+        graphics.putString(
+                new TerminalPosition((screenWidth - helpText.length()) / 2, screenHeight - 5),
+                helpText
+        );
     }
 }

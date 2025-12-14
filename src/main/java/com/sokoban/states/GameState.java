@@ -49,6 +49,17 @@ public class GameState extends State<Level> {
             return;
         }
 
+        if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'r' || key.getCharacter() == 'R')) {
+            LevelLoader loader = new LevelLoader();
+            Level currentLevel = loader.loadLevel(currIndexLevel);
+
+            if (currentLevel != null) {
+                currentLevel.initialize();
+                game.setState(new GameState(currentLevel, currIndexLevel));
+            }
+            return;
+        }
+
         getModel().processKey(key);
 
         if (getModel().isFinished()) {

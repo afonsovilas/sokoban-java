@@ -35,6 +35,7 @@ public class Game {
     public void run() {
         try {
             while (state!= null) {
+                screen.doResizeIfNecessary();
                 state.draw(screen, screen.newTextGraphics());
                 screen.refresh();
                 KeyStroke key = screen.readInput();
