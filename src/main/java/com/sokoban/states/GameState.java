@@ -44,7 +44,7 @@ public class GameState extends State<Level> {
 
         if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
             game.saveGameState(this);
-            game.setState(new MenuState(new Menu()));
+            game.setState(new MenuState(new Menu(true)));
             return;
         }
 
@@ -60,7 +60,7 @@ public class GameState extends State<Level> {
                 game.setState(new GameState(nextLevel, nextLevelNumber));
             } else {
                 System.out.println("YOU WON!");
-                game.setState(new MenuState(new Menu()));
+                game.setState(new MenuState(new Menu(false)));
             }
         }
     }

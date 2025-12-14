@@ -6,9 +6,18 @@ import java.util.List;
 public class Menu {
     private final List<String> entries;
     private int currentSelection = 0;
+    private final boolean isPaused;
 
-    public Menu() {
-        this.entries = Arrays.asList("Start Game","Resume", "Exit");
+    public Menu(boolean isPaused) {
+        this.isPaused = isPaused;
+        if (isPaused) {
+            this.entries = Arrays.asList("Restart Game","Resume", "Exit");
+            this.currentSelection = 1;
+        }
+        else  {
+            this.entries = Arrays.asList("Start Game", "Exit");
+            this.currentSelection = 0;
+        }
     }
 
     public void nextEntry() {
@@ -31,17 +40,18 @@ public class Menu {
         return currentSelection == i;
     }
 
-    public boolean isSelectedExit() {
-        return isSelected(2);
-    }
-
-    public boolean isSelectedResume() {return isSelected(1);}
-
-    public boolean isSelectedStart() {
-        return isSelected(0);
-    }
-
     public int getNumberEntries() {
         return entries.size();
+    }
+
+    public boolean isSelectedExit() {
+        return currentSelection == entries.size() - 1;
+    }
+
+    public boolean isSelectedResume() {
+        return isPaused && currentSelection==1;}
+
+    public boolean isSelectedStart() {
+        return currentSelection==0;
     }
 }
