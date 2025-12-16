@@ -20,9 +20,10 @@ public class Game {
     private State state;
     private GameState savedGame;
 
-    public Game(Screen screen) {
+
+    public Game(Screen screen,State initialState) {
         this.screen = screen;
-        this.state = new MenuState(new Menu(false));
+        this.state = initialState;
     }
 
 

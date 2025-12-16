@@ -5,7 +5,10 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.sokoban.Game;
+import com.sokoban.model.LevelManager;
 import com.sokoban.model.Menu;
+import com.sokoban.states.MenuState;
+import com.sokoban.model.MenuFactory;
 import com.sokoban.view.ScoreBoardViewer;
 
 import java.io.IOException;
@@ -13,10 +16,12 @@ import java.util.Map;
 
 public class ScoreBoardState extends State<Map<Integer, Integer>> {
     private final ScoreBoardViewer viewer;
+    private final LevelManager levelManager;
 
-    public ScoreBoardState(Map<Integer, Integer> scores) {
+    public ScoreBoardState(Map<Integer, Integer> scores,LevelManager levelManager) {
         super(scores);
         this.viewer = new ScoreBoardViewer(scores);
+        this.levelManager = levelManager;
     }
 
     @Override
@@ -30,7 +35,7 @@ public class ScoreBoardState extends State<Map<Integer, Integer>> {
         if (key == null) return;
 
         if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'q' || key.getCharacter() == 'Q')) {
-            game.setState(new MenuState(new Menu(false)));
+            game.setState(new MenuState(MenuFactory.createMainMenu(levelManager)));
         }
     }
 }
