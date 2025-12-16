@@ -77,7 +77,7 @@ public class LevelMenuViewer {
 
             backgroundColor = "#5D4037";
             textColor = "#8D6E63";
-            text += " \uD83D\uDD12";
+            text += " [Locked]";
         }
 
         graphics.setBackgroundColor(TextColor.Factory.fromString(backgroundColor));

@@ -16,7 +16,6 @@ public class OpenScoreBoardCommand implements Command {
 
     @Override
     public void execute(Game game) {
-        // Usa o loadScores() do teu ficheiro ScoreManager
         Map<Integer, Integer> scores = ScoreManager.loadScores();
         game.setState(new ScoreBoardState(scores, levelManager));
     }
