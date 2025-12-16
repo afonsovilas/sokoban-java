@@ -9,18 +9,24 @@ import com.googlecode.lanterna.screen.Screen;
 import com.sokoban.*;
 import com.sokoban.model.Level;
 import com.sokoban.model.LevelLoader;
+import com.sokoban.model.LevelManager;
 import com.sokoban.model.Menu;
 import com.sokoban.utils.ScoreManager;
 import com.sokoban.view.LevelViewer;
+import com.sokoban.model.MenuFactory;
+
+import java.io.IOException;
 
 public class GameState extends State<Level> {
     private int currIndexLevel;
     private final LevelViewer levelviewer;
+    private final LevelManager levelManager;
 
-    public GameState(Level level, int currIndexLevel) {
+    public GameState(Level level, int currIndexLevel, LevelManager levelManager) {
         super(level);
         this.currIndexLevel= currIndexLevel;
         this.levelviewer = new LevelViewer(level);
+        this.levelManager = levelManager;
     }
 
     @Override
@@ -45,36 +51,44 @@ public class GameState extends State<Level> {
 
         if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
             game.saveGameState(this);
-            game.setState(new MenuState(new Menu(true)));
+            game.setState(new MenuState(MenuFactory.createPauseMenu(levelManager, currIndexLevel)));
             return;
         }
 
         if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'r' || key.getCharacter() == 'R')) {
-            LevelLoader loader = new LevelLoader();
-            Level currentLevel = loader.loadLevel(currIndexLevel);
-
-            if (currentLevel != null) {
-                currentLevel.initialize();
-                game.setState(new GameState(currentLevel, currIndexLevel));
-            }
+            restartLevel(game);
             return;
         }
 
         getModel().processKey(key);
-
         if (getModel().isFinished()) {
-            ScoreManager.saveScore(currIndexLevel, getModel().getSteps());
-            int nextLevelNumber = currIndexLevel + 1;
-            LevelLoader loader = new LevelLoader();
-            Level nextLevel = loader.loadLevel(nextLevelNumber);
-
-            if (nextLevel != null) {
-                nextLevel.initialize();
-                game.setState(new GameState(nextLevel, nextLevelNumber));
-            } else {
-                System.out.println("YOU WON!");
-                game.setState(new MenuState(new Menu(false)));
-            }
+            handleVictory(game);
         }
+
+
+    }
+    private void restartLevel(Game game) {
+
+        Level currentLevel = new LevelLoader().loadLevel(currIndexLevel);
+        currentLevel.initialize();
+        game.setState(new GameState(currentLevel, currIndexLevel, levelManager));
+
+    }
+
+    private void handleVictory(Game game) {
+        ScoreManager.saveScore(currIndexLevel, getModel().getSteps());
+        levelManager.unlockNextLevel(currIndexLevel);
+
+        int nextLevelNumber = currIndexLevel + 1;
+
+        Level nextLevel = new LevelLoader().loadLevel(nextLevelNumber);
+        if (nextLevel != null) {
+            nextLevel.initialize();
+            game.setState(new GameState(nextLevel, nextLevelNumber, levelManager));
+        } else {
+            System.out.println("YOU WON THE GAME!");
+            game.setState(new MenuState(MenuFactory.createMainMenu(levelManager)));
+        }
+
     }
 }

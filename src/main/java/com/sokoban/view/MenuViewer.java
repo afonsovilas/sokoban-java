@@ -32,7 +32,8 @@ public class MenuViewer {
         int startY = (height - totalEntries) / 2;
 
         for (int i = 0; i < totalEntries; i++) {
-            String entry = menu.getEntry(i);
+
+            String entry = menu.getEntryText(i);
 
             if (menu.isSelected(i)) {
                 graphics.setForegroundColor(TextColor.Factory.fromString("#FF9800"));
