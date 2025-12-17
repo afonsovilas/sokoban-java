@@ -53,8 +53,38 @@ public class MenuFactory {
         ));
     }
 
+    public static Menu createWinMenu(LevelManager levelManager, int nextLevelIndex) {
+
+        Command nextLevelCommand = game -> {
+            Level nextLevel = new LevelLoader().loadLevel(nextLevelIndex);
+
+            if (nextLevel != null) {
+                game.setState(new GameState(nextLevel, nextLevelIndex, levelManager));
+            } else {
+
+                System.out.println("No more levels!");
+                game.setState(new MenuState(createMainMenu(levelManager)));
+            }
+        };
+
+
+        Command levelsCommand = new OpenLevelMenuCommand(levelManager);
+
+        return new Menu(Arrays.asList(
+                new Menu.MenuEntry("Next Level", nextLevelCommand),
+                new Menu.MenuEntry("Levels", levelsCommand)
+        ));
+    }
+
     private static void startGame(Game game, int level, LevelManager manager) {
-        game.setState(new GameState(new LevelLoader().loadLevel(level), level, manager));
+        Level newLevel = new LevelLoader().loadLevel(level);
+
+        if (newLevel != null) {
+            game.setState(new GameState(newLevel, level, manager));
+        } else {
+            System.err.println("Erro ao carregar nível " + level);
+            game.setState(new MenuState(createMainMenu(manager)));
+        }
 
     }
 }
