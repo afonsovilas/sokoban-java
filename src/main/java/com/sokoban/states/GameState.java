@@ -81,14 +81,9 @@ public class GameState extends State<Level> {
 
         int nextLevelNumber = currIndexLevel + 1;
 
-        Level nextLevel = new LevelLoader().loadLevel(nextLevelNumber);
-        if (nextLevel != null) {
-            nextLevel.initialize();
-            game.setState(new GameState(nextLevel, nextLevelNumber, levelManager));
-        } else {
-            System.out.println("YOU WON THE GAME!");
-            game.setState(new MenuState(MenuFactory.createMainMenu(levelManager)));
-        }
+        Menu winMenu = MenuFactory.createWinMenu(levelManager, nextLevelNumber);
+
+        game.setState(new WinMenuState(winMenu));
 
     }
 }
