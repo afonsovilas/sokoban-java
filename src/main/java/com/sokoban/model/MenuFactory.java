@@ -87,4 +87,17 @@ public class MenuFactory {
         }
 
     }
+    public static Menu createGameWonMenu(LevelManager levelManager) {
+
+        Command levelsCommand = new OpenLevelMenuCommand(levelManager);
+
+
+        Command exitToMenuCommand = game ->
+                game.setState(new MenuState(createMainMenu(levelManager)));
+
+        return new Menu(Arrays.asList(
+                new Menu.MenuEntry("Levels", levelsCommand),
+                new Menu.MenuEntry("Exit to Menu", exitToMenuCommand)
+        ));
+    }
 }
