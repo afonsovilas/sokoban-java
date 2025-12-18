@@ -28,12 +28,16 @@ public class LevelViewer {
                 ' '
         );
 
+        int screenMargin = 27;
+        int textY = offsetY - borderY - 2;
+
         graphics.setForegroundColor(TextColor.Factory.fromString("#FFFFFF"));
         graphics.enableModifiers(SGR.BOLD);
 
         String stepText = "Steps: " + level.getSteps();
+        int stepX = screenWidth - stepText.length() - screenMargin;
         graphics.putString(
-                new TerminalPosition(offsetX + level.getWidth() - stepText.length() + borderX, offsetY - borderY - 2),
+                new TerminalPosition(stepX, textY),
                 stepText
         );
 
@@ -49,8 +53,10 @@ public class LevelViewer {
         }
 
         String livesText = "Lives: " + hearts.toString();
+
+        int livesX = screenMargin;
         graphics.putString(
-                new TerminalPosition(offsetX - borderX, offsetY - borderY - 2),
+                new TerminalPosition(livesX, textY),
                 livesText
         );
 
@@ -86,7 +92,7 @@ public class LevelViewer {
         String helpText = "[Q] MENU   [R] RESET   [U] UNDO";
 
         graphics.putString(
-                new TerminalPosition((screenWidth - helpText.length()) / 2, screenHeight - 8),
+                new TerminalPosition((screenWidth - helpText.length()) / 2, screenHeight - 10),
                 helpText
         );
     }

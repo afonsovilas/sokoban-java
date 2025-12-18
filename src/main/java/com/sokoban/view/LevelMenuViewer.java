@@ -52,7 +52,7 @@ public class LevelMenuViewer {
 
         graphics.setBackgroundColor(TextColor.Factory.fromString("#3E2723"));
         graphics.setForegroundColor(TextColor.Factory.fromString("#BCAAA4"));
-        graphics.putString(new TerminalPosition((width - footer.length()) / 2, height - 8), footer);
+        graphics.putString(new TerminalPosition((width - footer.length()) / 2, height - 12), footer);
     }
 
     private void drawLevelBox(TextGraphics graphics, int x, int y, int width, int height, int index) {
