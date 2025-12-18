@@ -12,6 +12,6 @@ public class HeroViewer implements ElementViewer<Hero> {
         graphics.setBackgroundColor(TextColor.Factory.fromString("#3E2723"));
         graphics.setForegroundColor(TextColor.Factory.fromString("#FFD700"));
         graphics.enableModifiers(SGR.BOLD);
-        graphics.putString(new TerminalPosition(hero.getPosition().getX(), hero.getPosition().getY()), "@");
+        graphics.putString(new TerminalPosition(hero.getPosition().getX(), hero.getPosition().getY()), "\u263A");
     }
 }
