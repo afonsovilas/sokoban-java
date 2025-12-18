@@ -46,6 +46,6 @@ public class ScoreBoardViewer {
 
         String exitMsg = "[Q] MENU";
         graphics.setForegroundColor(TextColor.Factory.fromString("#D7CCC8"));
-        graphics.putString(new TerminalPosition((width - exitMsg.length()) / 2, height - 10), exitMsg);
+        graphics.putString(new TerminalPosition((width - exitMsg.length()) / 2, height - 12), exitMsg);
     }
 }
