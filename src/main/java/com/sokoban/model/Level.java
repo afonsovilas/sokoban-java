@@ -95,8 +95,8 @@ public class Level {
         }
 
         if (direction != null) {
-            boolean heroHasPower = controller.hasSuperPower();
-            LevelMemento snapshot = new LevelMemento(hero, boxes, powerUps,heroHasPower);
+            long time = controller.getRemainingTime();
+            LevelMemento snapshot = new LevelMemento(hero, boxes, powerUps,time);
             Position before = hero.getPosition();
             controller.moveHero(direction);
             if (!hero.getPosition().equals(before)) {
@@ -126,7 +126,7 @@ public class Level {
                 }
             }
             this.powerUps = new ArrayList<>(lastState.getActivePowerUps());
-            controller.setSuperPower(lastState.hasPower());
+            controller.setSuperPower(lastState.getRemainingTime());
             updateBoxStates();
         }
     }
@@ -160,5 +160,9 @@ public class Level {
     }
     public void setLives(int lives) {this.lives = lives;}
     public int getLives() {return lives;}
+    public long getPowerUpTime() {
+        if (controller == null) return 0;
+        return controller.getSecondsLeft();
+    }
 }
 

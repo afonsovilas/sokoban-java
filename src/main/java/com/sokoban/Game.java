@@ -39,10 +39,16 @@ public class Game {
                 screen.doResizeIfNecessary();
                 state.draw(screen, screen.newTextGraphics());
                 screen.refresh();
-                KeyStroke key = screen.readInput();
+                KeyStroke key = screen.pollInput();
 
-                state.step(this,key);
-
+                if (state != null) {
+                    state.step(this, key);
+                }
+                try {
+                    Thread.sleep(20);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             screen.close();
         }
