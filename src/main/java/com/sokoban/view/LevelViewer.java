@@ -36,6 +36,24 @@ public class LevelViewer {
                 new TerminalPosition(offsetX + level.getWidth() - stepText.length() + borderX, offsetY - borderY - 2),
                 stepText
         );
+
+        graphics.setForegroundColor(TextColor.Factory.fromString("#FF1744"));
+        StringBuilder hearts = new StringBuilder();
+        for (int i = 0; i < level.getLives(); i++) {
+            hearts.append("\u2764 ");
+        }
+
+        if (level.getLives() == 0) {
+            graphics.setForegroundColor(TextColor.Factory.fromString("#B0BEC5"));
+            hearts.append("0");
+        }
+
+        String livesText = "Lives: " + hearts.toString();
+        graphics.putString(
+                new TerminalPosition(offsetX - borderX, offsetY - borderY - 2),
+                livesText
+        );
+
         graphics.disableModifiers(SGR.BOLD);
 
         TextGraphics centeredGraphics = graphics.newTextGraphics(
@@ -65,7 +83,7 @@ public class LevelViewer {
         graphics.setForegroundColor(TextColor.Factory.fromString("#D7CCC8"));
         graphics.disableModifiers(SGR.BOLD);
 
-        String helpText = "[Q] MENU   [R] RESET";
+        String helpText = "[Q] MENU   [R] RESET   [U] UNDO";
 
         graphics.putString(
                 new TerminalPosition((screenWidth - helpText.length()) / 2, screenHeight - 8),

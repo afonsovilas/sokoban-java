@@ -1,12 +1,14 @@
 package com.sokoban.model;
 
 import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 import com.sokoban.controller.Collision;
 import com.sokoban.controller.GameRules;
 import com.sokoban.controller.HeroController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class Level {
     protected int width;
@@ -23,6 +25,9 @@ public class Level {
     protected HeroController controller;
     protected Collision collision;
     protected List<PowerUp> powerUps;
+
+    private int lives = 3;
+    private Stack<LevelState> history = new Stack<>();
 
     public Level(int width, int height) {
         this.width = width;
@@ -75,6 +80,11 @@ public class Level {
     public void processKey(KeyStroke key) {
         if (controller == null) return;
 
+        if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'u' || key.getCharacter() == 'U')) {
+            undo();
+            return;
+        }
+
         Position direction = null;
 
         switch (key.getKeyType()) {
@@ -85,15 +95,36 @@ public class Level {
         }
 
         if (direction != null) {
+            LevelState snapshot = new LevelState(hero, boxes);
             Position before = hero.getPosition();
             controller.moveHero(direction);
             if (!hero.getPosition().equals(before)) {
+                history.push(snapshot);
                 this.steps++;
+                updateBoxStates();
+                if (gameRules.checkWin(this)) {
+                    this.isFinished = true;
+                }
+            }
+        }
+    }
+
+    private void undo() {
+        if (lives > 0 && !history.isEmpty() && !isFinished) {
+            lives--;
+            steps--;
+
+            LevelState lastState = history.pop();
+
+            hero.setPosition(lastState.getHeroPosition());
+
+            for (Box box : boxes) {
+                Position savedPos = lastState.getBoxPositions().get(box);
+                if (savedPos != null) {
+                    box.setPosition(savedPos);
+                }
             }
             updateBoxStates();
-            if (gameRules.checkWin(this)) {
-                this.isFinished = true;
-            }
         }
     }
 
@@ -124,5 +155,7 @@ public class Level {
     public void removePowerUp(PowerUp p) {
         powerUps.remove(p);
     }
+    public void setLives(int lives) {this.lives = lives;}
+    public int getLives() {return lives;}
 }
 
