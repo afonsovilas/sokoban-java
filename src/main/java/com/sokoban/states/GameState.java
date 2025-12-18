@@ -14,6 +14,7 @@ import com.sokoban.model.Menu;
 import com.sokoban.utils.ScoreManager;
 import com.sokoban.view.LevelViewer;
 import com.sokoban.model.MenuFactory;
+import com.sokoban.states.GameWonState;
 
 import java.io.IOException;
 
@@ -81,9 +82,15 @@ public class GameState extends State<Level> {
 
         int nextLevelNumber = currIndexLevel + 1;
 
-        Menu winMenu = MenuFactory.createWinMenu(levelManager, nextLevelNumber);
+        Level nextLevel = new LevelLoader().loadLevel(nextLevelNumber);
+        if (nextLevel != null) {
 
-        game.setState(new WinMenuState(winMenu));
+            Menu winMenu = MenuFactory.createWinMenu(levelManager, nextLevelNumber);
+            game.setState(new WinMenuState(winMenu));
+        } else {
+            Menu gameWonMenu = MenuFactory.createGameWonMenu(levelManager);
+            game.setState(new GameWonState(gameWonMenu));
+        }
 
     }
 }
