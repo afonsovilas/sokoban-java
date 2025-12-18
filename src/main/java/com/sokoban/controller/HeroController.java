@@ -39,4 +39,18 @@ public class HeroController {
             System.out.println("SUPER POWER ATIVADO! (Strategy Pattern)");
         }
     }
+
+    public boolean hasSuperPower() {
+        return (strategy instanceof SuperMovementStrategy) && (System.currentTimeMillis() <= powerEndTime);
+    }
+
+    public void setSuperPower(boolean active) {
+        if (active) {
+            this.strategy = new SuperMovementStrategy();
+            this.powerEndTime = System.currentTimeMillis() + 10000;
+        } else {
+            this.strategy = new NormalMovementStrategy();
+            this.powerEndTime = 0;
+        }
+    }
 }

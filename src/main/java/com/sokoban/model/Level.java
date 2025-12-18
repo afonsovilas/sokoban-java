@@ -27,7 +27,7 @@ public class Level {
     protected List<PowerUp> powerUps;
 
     private int lives = 3;
-    private Stack<LevelState> history = new Stack<>();
+    private Stack<LevelMemento> history = new Stack<>();
 
     public Level(int width, int height) {
         this.width = width;
@@ -57,7 +57,7 @@ public class Level {
                 if (x >= line.length()) break;
 
                 char c = line.charAt(x);
-                Element element = ElementCreation.createElement(c, x, y);
+                Element element = ElementFactory.createElement(c, x, y);
 
                 if (element != null) {
                     if (element instanceof Wall) walls.add((Wall) element);
@@ -95,7 +95,8 @@ public class Level {
         }
 
         if (direction != null) {
-            LevelState snapshot = new LevelState(hero, boxes);
+            boolean heroHasPower = controller.hasSuperPower();
+            LevelMemento snapshot = new LevelMemento(hero, boxes, powerUps,heroHasPower);
             Position before = hero.getPosition();
             controller.moveHero(direction);
             if (!hero.getPosition().equals(before)) {
@@ -114,7 +115,7 @@ public class Level {
             lives--;
             steps--;
 
-            LevelState lastState = history.pop();
+            LevelMemento lastState = history.pop();
 
             hero.setPosition(lastState.getHeroPosition());
 
@@ -124,6 +125,8 @@ public class Level {
                     box.setPosition(savedPos);
                 }
             }
+            this.powerUps = new ArrayList<>(lastState.getActivePowerUps());
+            controller.setSuperPower(lastState.hasPower());
             updateBoxStates();
         }
     }
