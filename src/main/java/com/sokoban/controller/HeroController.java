@@ -17,6 +17,7 @@ public class HeroController {
     public void moveHero(Position direction) {
         if (System.currentTimeMillis() > powerEndTime && strategy instanceof SuperMovementStrategy) {
             this.strategy = new NormalMovementStrategy();
+            this.powerEndTime = 0;
             System.out.println("Super Power Acabou... De volta ao normal.");
         }
 
@@ -25,7 +26,9 @@ public class HeroController {
                 hero.getPosition().getY() + direction.getY()
         );
 
-        collectPowerUp(nextPos);
+        if (collision.getBoxAt(nextPos) == null) {
+            collectPowerUp(nextPos);
+        }
         strategy.move(hero, direction, collision);
     }
 
@@ -52,5 +55,27 @@ public class HeroController {
             this.strategy = new NormalMovementStrategy();
             this.powerEndTime = 0;
         }
+    }
+
+    public long getRemainingTime() {
+        if (!hasSuperPower()) return 0;
+        return powerEndTime - System.currentTimeMillis();
+    }
+
+    public void setSuperPower(long durationMillis) {
+        if (durationMillis > 0) {
+            this.strategy = new SuperMovementStrategy();
+            this.powerEndTime = System.currentTimeMillis() + durationMillis;
+        } else {
+            this.strategy = new NormalMovementStrategy();
+            this.powerEndTime = 0;
+        }
+    }
+
+    public long getSecondsLeft() {
+        if (!hasSuperPower()) return 0;
+
+        long millisLeft = powerEndTime - System.currentTimeMillis();
+        return Math.max(0, millisLeft / 1000);
     }
 }

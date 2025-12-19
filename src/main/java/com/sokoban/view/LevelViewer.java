@@ -60,6 +60,21 @@ public class LevelViewer {
                 livesText
         );
 
+        long time = level.getPowerUpTime();
+
+        if (time > 0) {
+            String powerText = "\u26A1: " + time + "s";
+
+            graphics.setForegroundColor(TextColor.Factory.fromString("#FFD700"));
+            graphics.enableModifiers(SGR.BOLD);
+
+            graphics.putString(
+                    new TerminalPosition(livesX, textY + 1),
+                    powerText
+            );
+            graphics.disableModifiers(SGR.BOLD);
+        }
+
         graphics.disableModifiers(SGR.BOLD);
 
         TextGraphics centeredGraphics = graphics.newTextGraphics(

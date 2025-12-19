@@ -9,9 +9,9 @@ public class LevelMemento {
     private final Position heroPosition;
     private final Map<Box, Position> boxPositions;
     private final List<PowerUp> activePowerUps;
-    private final boolean hasPower;
+    private final long remainingTime;
 
-    public LevelMemento(Hero hero, List<Box> boxes, List<PowerUp> powerUps,boolean hasPower) {
+    public LevelMemento(Hero hero, List<Box> boxes, List<PowerUp> powerUps,long remainingTime) {
         this.heroPosition = new Position(hero.getPosition().getX(), hero.getPosition().getY());
 
         this.boxPositions = new HashMap<>();
@@ -19,7 +19,7 @@ public class LevelMemento {
             this.boxPositions.put(box, new Position(box.getPosition().getX(), box.getPosition().getY()));
         }
         this.activePowerUps = new ArrayList<>(powerUps);
-        this.hasPower = hasPower;
+        this.remainingTime = remainingTime;
     }
 
     public Position getHeroPosition() {
@@ -34,7 +34,5 @@ public class LevelMemento {
         return activePowerUps;
     }
 
-    public boolean hasPower() {
-        return hasPower;
-    }
+    public long getRemainingTime() { return remainingTime; }
 }
