@@ -4,10 +4,13 @@ import java.io.*;
 
 public class LevelManager {
     private int maxUnlockedLevel;
-    private static final String PROGRESS_FILE = "progress.txt";
+    private final String filename;
 
     public LevelManager() {
-
+        this("progress.txt");
+    }
+    public LevelManager(String filename) {
+        this.filename = filename;
         this.maxUnlockedLevel = loadProgress();
     }
 
@@ -19,7 +22,7 @@ public class LevelManager {
     }
 
     private void saveProgress() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(PROGRESS_FILE))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.filename))) {
             writer.write(String.valueOf(maxUnlockedLevel));
         } catch (IOException e) {
             System.err.println("Não foi possível guardar o progresso: " + e.getMessage());
@@ -27,7 +30,7 @@ public class LevelManager {
     }
 
     private int loadProgress() {
-        File file = new File(PROGRESS_FILE);
+        File file = new File(this.filename);
         if (!file.exists()) {
             return 1;
         }

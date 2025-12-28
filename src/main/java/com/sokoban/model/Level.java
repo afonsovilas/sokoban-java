@@ -40,6 +40,31 @@ public class Level {
         this.powerUps = new ArrayList<>();
     }
 
+    public void addElement(Element element) {
+        if (element == null) return;
+
+        Position p = element.getPosition();
+
+        if (p.getX() < 0 || p.getX() >= width || p.getY() < 0 || p.getY() >= height) {
+            throw new IllegalArgumentException("Elemento na posição (" + p.getX() + "," + p.getY() +
+                    ") está fora dos limites do nível (" + width + "x" + height + ")");
+        }
+
+        if (element instanceof Wall) {
+            walls.add((Wall) element);
+        } else if (element instanceof Box) {
+            boxes.add((Box) element);
+        } else if (element instanceof Hero) {
+            this.hero = (Hero) element;
+        } else if (element instanceof Target) {
+            targets.add((Target) element);
+        } else if (element instanceof Portal) {
+            portals.add((Portal) element);
+        } else if (element instanceof PowerUp) {
+            powerUps.add((PowerUp) element);
+        }
+    }
+
     public void loadLevel(String[] levelDesign) {
         int maxWidth = 0;
         for (String line : levelDesign) {
@@ -51,6 +76,8 @@ public class Level {
         this.width = maxWidth;
         this.height = levelDesign.length;
 
+        walls.clear(); boxes.clear(); targets.clear(); portals.clear(); powerUps.clear();
+
         for (int y = 0; y < height; y++) {
             String line = levelDesign[y];
             for (int x = 0; x < width; x++) {
@@ -60,12 +87,7 @@ public class Level {
                 Element element = ElementFactory.createElement(c, x, y);
 
                 if (element != null) {
-                    if (element instanceof Wall) walls.add((Wall) element);
-                    else if (element instanceof Box) boxes.add((Box) element);
-                    else if (element instanceof Hero) hero = (Hero) element;
-                    else if (element instanceof Target) targets.add((Target) element);
-                    else if (element instanceof Portal) portals.add((Portal) element);
-                    else if (element instanceof PowerUp) powerUps.add((PowerUp) element);
+                    addElement(element);
                 }
             }
         }
@@ -131,7 +153,7 @@ public class Level {
         }
     }
 
-    private void updateBoxStates() {
+    public void updateBoxStates() {
         for (Box box : boxes) {
             boolean isOnTarget = false;
 
