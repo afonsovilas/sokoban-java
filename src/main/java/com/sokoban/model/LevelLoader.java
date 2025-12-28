@@ -11,7 +11,6 @@ public class LevelLoader {
 
     public Level loadLevel(int levelNumber) {
         List<String> lines = new ArrayList<>();
-        int lives=3;
         try {
             URL resource = getClass().getClassLoader().getResource("levels/level" + levelNumber + ".txt");
             if (resource == null) {
@@ -19,31 +18,47 @@ public class LevelLoader {
             }
 
             BufferedReader br = new BufferedReader(new FileReader(resource.getFile()));
-
             for (String line; (line = br.readLine()) != null; ) {
-                if (line.trim().startsWith("Lives:")) {
-                    try {
-                        lives = Integer.parseInt(line.split(":")[1].trim());
-                    } catch (NumberFormatException e) {
-                        System.err.println("Erro ao ler vidas: " + e.getMessage());
-                    }
-                    continue;
-                }
                 lines.add(line);
             }
             br.close();
 
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
 
-        String[] levelDesign = lines.toArray(new String[0]);
+        return createLevelFromLines(lines);
+    }
 
-        Level level = new Level(levelDesign[0].length(), levelDesign.length);
+    Level createLevelFromLines(List<String> lines) {
+        int lives = 3;
+        List<String> mapLines = new ArrayList<>();
+
+        for (String line : lines) {
+            if (line.trim().startsWith("Lives:")) {
+                try {
+                    lives = Integer.parseInt(line.split(":")[1].trim());
+                } catch (NumberFormatException e) {
+                    System.err.println("Erro ao ler vidas: " + e.getMessage());
+                }
+                continue;
+            }
+            mapLines.add(line);
+        }
+
+        if (mapLines.isEmpty()) return null;
+
+        String[] levelDesign = mapLines.toArray(new String[0]);
+
+        int width = 0;
+        for (String s : levelDesign) width = Math.max(width, s.length());
+        int height = levelDesign.length;
+
+        Level level = new Level(width, height);
         level.loadLevel(levelDesign);
         level.setLives(lives);
         level.initialize();
+
         return level;
     }
 }

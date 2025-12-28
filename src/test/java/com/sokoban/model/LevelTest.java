@@ -2,120 +2,111 @@ package com.sokoban.model;
 
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
-import com.sokoban.model.Box;
-import com.sokoban.model.Hero;
-import com.sokoban.model.Position;
+import com.sokoban.controller.GameRules;
+import com.sokoban.controller.HeroController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.Stack;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 class LevelTest {
     private Level level;
+    private HeroController controllerMock;
+    private GameRules gameRulesMock;
+    private Hero hero;
 
     @BeforeEach
     void setUp() {
+
         level = new Level(10, 10);
+        hero = new Hero(5, 5);
+        level.addElement(hero);
+
+        controllerMock = Mockito.mock(HeroController.class);
+        gameRulesMock = Mockito.mock(GameRules.class);
+
+        level.controller = controllerMock;
+        level.gameRules = gameRulesMock;
+
+        level.boxes = new ArrayList<>();
+        level.powerUps = new ArrayList<>();
+        level.targets = new ArrayList<>();
+
     }
 
-    @Test
-    void testProcessKeyMoveHero() {
-        String[] map = {
-                "#####",
-                "# X #",
-                "#####"
-        };
-        level.loadLevel(map);
-        level.initialize();
-        assertEquals(new Position(2, 1), level.getHero().getPosition());
-        level.processKey(new KeyStroke(KeyType.ArrowRight));
-        assertEquals(new Position(3, 1), level.getHero().getPosition());
-    }
 
     @Test
-    void testProcessKeyIntoWall() {
-        String[] map = {
-                "###",
-                "#X#",
-                "###"
-        };
-        level.loadLevel(map);
-        level.initialize();
+    void cannotAddElementOutOfBounds() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            level.addElement(new Wall(11, 11));
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            level.addElement(new Hero(-1, 5));
+        });
+    }
+
+
+    @Test
+    void processKeyShouldDelegateToController() {
         level.processKey(new KeyStroke(KeyType.ArrowUp));
-        assertEquals(new Position(1, 1), level.getHero().getPosition());
+
+        verify(controllerMock, times(1)).moveHero(eq(new Position(0, -1)));
+
+        assertEquals(0, level.getSteps(), "Se o herói não muda de sítio (mock default), passos não contam");
     }
 
     @Test
-    void testProcessKeyArrowDown() {
-        String[] map = {
-                "   ",
-                " X ",
-                "   "
-        };
-        level.loadLevel(map);
-        level.initialize();
+    void gameShouldFinishWhenRulesSaySo() {
 
-        assertEquals(new Position(1, 1), level.getHero().getPosition());
-        level.processKey(new KeyStroke(KeyType.ArrowDown));
-        assertEquals(new Position(1, 2), level.getHero().getPosition());
+        when(gameRulesMock.checkWin(level)).thenReturn(true);
+
+        doAnswer(inv -> { hero.setPosition(new Position(5, 4)); return null; })
+                .when(controllerMock).moveHero(any());
+
+        level.processKey(new KeyStroke(KeyType.ArrowUp));
+
+        assertTrue(level.isFinished());
     }
 
     @Test
-    void testProcessKeyArrowLeft() {
-        String[] map = {
-                "   ",
-                " X ",
-                "   "
-        };
-        level.loadLevel(map);
-        level.initialize();
-        level.processKey(new KeyStroke(KeyType.ArrowLeft));
-        assertEquals(new Position(0, 1), level.getHero().getPosition());
+    void boxShouldBeOnTargetWhenCoordinatesMatch() {
+        // Arrange manual (sem loadLevel)
+        Box box = new Box(2, 2);
+        Target target = new Target(2, 2);
+        level.addElement(box);
+        level.addElement(target);
+
+        level.updateBoxStates();
+
+        assertTrue(box.isOnTarget());
     }
 
     @Test
-    void testUpdateBoxStates() {
-        String[] map = {
-                "#####",
-                "#XO*#",
-                "#####"
-        };
-        level.loadLevel(map);
-        level.initialize();
+    void undoShouldRevertPositionAndSteps() {
+        Position startPos = new Position(5, 5);
+        Position movedPos = new Position(5, 4);
 
-        Box box = level.getBoxes().get(0);
+        doAnswer(inv -> {
+            hero.setPosition(movedPos);
+            return null;
+        }).when(controllerMock).moveHero(any());
 
-        assertFalse(box.isOnTarget());
-        level.processKey(new KeyStroke(KeyType.ArrowRight));
-        assertEquals(new Position(3, 1), box.getPosition());
-        assertTrue(box.isOnTarget(), "A caixa devia estar marcada como 'no alvo'");
-    }
+        level.processKey(new KeyStroke(KeyType.ArrowUp));
 
-    @Test
-    void testIsFinished() {
-        String[] map = {
-                "#####",
-                "#XO*#",
-                "#####"
-        };
-        level.loadLevel(map);
-        level.initialize();
+        assertEquals(1, level.getSteps());
+        assertEquals(movedPos, hero.getPosition());
 
-        assertFalse(level.isFinished(), "O nível não deve começar acabado");
-        level.processKey(new KeyStroke(KeyType.ArrowRight));
-        assertTrue(level.isFinished(), "O nível devia ter terminado");
-    }
+        level.processKey(new KeyStroke('u', false, false));
 
-    @Test
-    void testInvalidKeys() {
-        String[] map = {"#X#"};
-        level.loadLevel(map);
-        level.initialize();
-
-        Position initialPos = level.getHero().getPosition();
-        level.processKey(new KeyStroke('a', false, false));
-        assertEquals(initialPos, level.getHero().getPosition());
-        level.processKey(new KeyStroke(KeyType.EOF));
-        assertEquals(initialPos, level.getHero().getPosition());
+        assertEquals(0, level.getSteps());
+        assertEquals(startPos, hero.getPosition());
+        assertEquals(2, level.getLives());
     }
 }
