@@ -1,81 +1,53 @@
 package com.sokoban.controller;
 
-import com.sokoban.model.*;
+import com.sokoban.model.Hero;
+import com.sokoban.model.Position;
+import com.sokoban.model.PowerUp;
 
 public class HeroController {
     private final Hero hero;
     private final Collision collision;
-    private MovementStrategy strategy;
-    private long powerEndTime = 0;
+    private final PowerUpManager powerUpManager;
 
     public HeroController(Hero hero, Collision collision) {
         this.hero = hero;
         this.collision = collision;
-        this.strategy = new NormalMovementStrategy();
+        this.powerUpManager = new PowerUpManager();
     }
 
     public void moveHero(Position direction) {
-        if (System.currentTimeMillis() > powerEndTime && strategy instanceof SuperMovementStrategy) {
-            this.strategy = new NormalMovementStrategy();
-            this.powerEndTime = 0;
-            System.out.println("Super Power Acabou... De volta ao normal.");
-        }
+        powerUpManager.update();
 
         Position nextPos = new Position(
                 hero.getPosition().getX() + direction.getX(),
                 hero.getPosition().getY() + direction.getY()
         );
 
-        if (collision.getBoxAt(nextPos) == null) {
-            collectPowerUp(nextPos);
-        }
-        strategy.move(hero, direction, collision);
+        collectPowerUp(nextPos);
+        powerUpManager.getStrategy().move(hero, direction, collision);
     }
 
     private void collectPowerUp(Position position) {
         PowerUp powerUp = collision.getPowerUpAt(position);
         if (powerUp != null) {
-            this.strategy = new SuperMovementStrategy();
-            this.powerEndTime = System.currentTimeMillis() + 10000;
-
+            powerUpManager.activateSuperPower();
             collision.getLevel().removePowerUp(powerUp);
-            System.out.println("SUPER POWER ATIVADO! (Strategy Pattern)");
         }
     }
 
     public boolean hasSuperPower() {
-        return (strategy instanceof SuperMovementStrategy) && (System.currentTimeMillis() <= powerEndTime);
-    }
-
-    public void setSuperPower(boolean active) {
-        if (active) {
-            this.strategy = new SuperMovementStrategy();
-            this.powerEndTime = System.currentTimeMillis() + 10000;
-        } else {
-            this.strategy = new NormalMovementStrategy();
-            this.powerEndTime = 0;
-        }
-    }
-
-    public long getRemainingTime() {
-        if (!hasSuperPower()) return 0;
-        return powerEndTime - System.currentTimeMillis();
-    }
-
-    public void setSuperPower(long durationMillis) {
-        if (durationMillis > 0) {
-            this.strategy = new SuperMovementStrategy();
-            this.powerEndTime = System.currentTimeMillis() + durationMillis;
-        } else {
-            this.strategy = new NormalMovementStrategy();
-            this.powerEndTime = 0;
-        }
+        return powerUpManager.isActive();
     }
 
     public long getSecondsLeft() {
-        if (!hasSuperPower()) return 0;
+        return powerUpManager.getSecondsLeft();
+    }
 
-        long millisLeft = powerEndTime - System.currentTimeMillis();
-        return Math.max(0, millisLeft / 1000);
+    public long getRemainingTime() {
+        return powerUpManager.getRemainingMillis();
+    }
+
+    public void setSuperPower(long duration) {
+        powerUpManager.setPowerDuration(duration);
     }
 }

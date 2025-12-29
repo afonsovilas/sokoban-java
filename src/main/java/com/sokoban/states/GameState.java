@@ -7,6 +7,7 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.sokoban.*;
+import com.sokoban.controller.LevelController; // <--- NOVO IMPORT
 import com.sokoban.model.Level;
 import com.sokoban.model.LevelLoader;
 import com.sokoban.model.LevelManager;
@@ -14,7 +15,6 @@ import com.sokoban.model.Menu;
 import com.sokoban.utils.ScoreManager;
 import com.sokoban.view.LevelViewer;
 import com.sokoban.model.MenuFactory;
-import com.sokoban.states.GameWonState;
 
 import java.io.IOException;
 
@@ -22,12 +22,14 @@ public class GameState extends State<Level> {
     private int currIndexLevel;
     private final LevelViewer levelviewer;
     private final LevelManager levelManager;
+    private final LevelController controller;
 
     public GameState(Level level, int currIndexLevel, LevelManager levelManager) {
         super(level);
-        this.currIndexLevel= currIndexLevel;
+        this.currIndexLevel = currIndexLevel;
         this.levelviewer = new LevelViewer(level);
         this.levelManager = levelManager;
+        this.controller = new LevelController(level);
     }
 
     @Override
@@ -55,6 +57,7 @@ public class GameState extends State<Level> {
 
             if (c != null) {
                 if (c == 'q' || c == 'Q') {
+
                     game.saveGameState(this);
                     game.setState(new MenuState(MenuFactory.createPauseMenu(levelManager, currIndexLevel)));
                     return;
@@ -67,19 +70,17 @@ public class GameState extends State<Level> {
             }
         }
 
-        getModel().processKey(key);
+        controller.handleInput(key);
+
         if (getModel().isFinished()) {
             handleVictory(game);
         }
-
-
     }
+
     private void restartLevel(Game game) {
-
         Level currentLevel = new LevelLoader().loadLevel(currIndexLevel);
-        currentLevel.initialize();
-        game.setState(new GameState(currentLevel, currIndexLevel, levelManager));
 
+        game.setState(new GameState(currentLevel, currIndexLevel, levelManager));
     }
 
     private void handleVictory(Game game) {
@@ -90,13 +91,11 @@ public class GameState extends State<Level> {
 
         Level nextLevel = new LevelLoader().loadLevel(nextLevelNumber);
         if (nextLevel != null) {
-
             Menu winMenu = MenuFactory.createWinMenu(levelManager, nextLevelNumber);
             game.setState(new WinMenuState(winMenu));
         } else {
             Menu gameWonMenu = MenuFactory.createGameWonMenu(levelManager);
             game.setState(new GameWonState(gameWonMenu));
         }
-
     }
 }
