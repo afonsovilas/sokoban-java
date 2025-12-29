@@ -5,7 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ScoreManager {
-    private static final String FILE_NAME = "src/main/resources/levels/scores.txt";
+    private static String fileName = "src/main/resources/levels/scores.txt";
+
+    public static void setFileName(String path) {
+        fileName = path;
+    }
 
     public static void saveScore(int level, int steps) {
         Map<Integer, Integer> scores = loadScores();
@@ -18,7 +22,7 @@ public class ScoreManager {
 
     public static Map<Integer, Integer> loadScores() {
         Map<Integer, Integer> scores = new HashMap<>();
-        File file = new File(FILE_NAME);
+        File file = new File(fileName);
         if (!file.exists()) return scores;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -38,7 +42,7 @@ public class ScoreManager {
     }
 
     private static void writeScores(Map<Integer, Integer> scores) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (Map.Entry<Integer, Integer> entry : scores.entrySet()) {
                 writer.write(entry.getKey() + ":" + entry.getValue());
                 writer.newLine();

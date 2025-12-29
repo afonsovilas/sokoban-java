@@ -50,15 +50,21 @@ public class GameState extends State<Level> {
     public void step(Game game, KeyStroke key) {
         if (key == null) return;
 
-        if (key.getKeyType() == KeyType.Character && key.getCharacter() == 'q') {
-            game.saveGameState(this);
-            game.setState(new MenuState(MenuFactory.createPauseMenu(levelManager, currIndexLevel)));
-            return;
-        }
+        if (key.getKeyType() == KeyType.Character) {
+            Character c = key.getCharacter();
 
-        if (key.getKeyType() == KeyType.Character && (key.getCharacter() == 'r' || key.getCharacter() == 'R')) {
-            restartLevel(game);
-            return;
+            if (c != null) {
+                if (c == 'q' || c == 'Q') {
+                    game.saveGameState(this);
+                    game.setState(new MenuState(MenuFactory.createPauseMenu(levelManager, currIndexLevel)));
+                    return;
+                }
+
+                if (c == 'r' || c == 'R') {
+                    restartLevel(game);
+                    return;
+                }
+            }
         }
 
         getModel().processKey(key);
