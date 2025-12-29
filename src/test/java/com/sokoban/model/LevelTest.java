@@ -109,4 +109,63 @@ class LevelTest {
         assertEquals(startPos, hero.getPosition());
         assertEquals(2, level.getLives());
     }
+
+    @Test
+    void loadLevelShouldClearExistingElements() {
+        level.addElement(new Wall(0, 0));
+        level.addElement(new Box(0, 0));
+        assertFalse(level.getWalls().isEmpty());
+
+        String[] emptyMap = {"   "};
+        level.loadLevel(emptyMap);
+
+        assertTrue(level.getWalls().isEmpty(), "Deve limpar paredes antigas");
+        assertTrue(level.getBoxes().isEmpty(), "Deve limpar caixas antigas");
+    }
+
+    @Test
+    void undoShouldRestoreFullState() {
+        Box box = new Box(2, 2);
+        Target target = new Target(2, 2);
+        level.addElement(box);
+        level.addElement(target);
+        level.updateBoxStates();
+        assertTrue(box.isOnTarget());
+
+        when(controllerMock.getRemainingTime()).thenReturn(5000L);
+
+        Position originalHeroPos = hero.getPosition();
+        Position newHeroPos = new Position(5, 4);
+
+        doAnswer(inv -> {
+            hero.setPosition(newHeroPos);
+            box.setPosition(new Position(3, 2));
+            return null;
+        }).when(controllerMock).moveHero(any());
+
+        level.processKey(new KeyStroke(KeyType.ArrowUp));
+
+        assertEquals(newHeroPos, hero.getPosition());
+
+        reset(controllerMock);
+        level.processKey(new KeyStroke('u', false, false));
+
+        assertEquals(new Position(2, 2), box.getPosition());
+
+        verify(controllerMock).setSuperPower(5000L);
+        assertTrue(box.isOnTarget());
+    }
+
+    @Test
+    void testGettersAndPowerUpTime() {
+
+        assertNotNull(level.getWalls());
+        assertNotNull(level.getBoxes());
+        assertNotNull(level.getTargets());
+        assertNotNull(level.getPortals());
+        assertNotNull(level.getPowerUps());
+
+        when(controllerMock.getSecondsLeft()).thenReturn(10L);
+        assertEquals(10L, level.getPowerUpTime());
+    }
 }

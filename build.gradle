@@ -27,6 +27,15 @@ test {
     finalizedBy jacocoTestReport
 }
 
+pitest {
+    junit5PluginVersion = '1.2.1'
+    targetClasses = ['com.sokoban.*']
+    targetTests = ['com.sokoban.*']
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
+}
+
 jacocoTestReport {
     dependsOn test
     reports {
