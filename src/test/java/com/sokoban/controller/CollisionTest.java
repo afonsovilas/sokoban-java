@@ -46,26 +46,28 @@ class CollisionTest {
         assertTrue(collision.isFree(new Position(3, 3)), "Vazio é livre");
     }
 
-
     @Test
     void testGetOtherPortal() {
-        Portal p1 = new Portal(1, 1);
-        Portal p2 = new Portal(5, 5);
+        Portal p1 = new Portal(10, 10);
+        Portal p2 = new Portal(20, 20);
 
         when(level.getPortals()).thenReturn(List.of(p1, p2));
 
         assertEquals(p2, collision.getOtherPortal(p1));
+
         assertEquals(p1, collision.getOtherPortal(p2));
     }
 
     @Test
     void testGetPowerUpAt() {
-        PowerUp p = new PowerUp(3, 3);
-        when(level.getPowerUps()).thenReturn(List.of(p));
+        PowerUp powerUp = new PowerUp(7, 7);
+        when(level.getPowerUps()).thenReturn(List.of(powerUp));
 
-        assertNotNull(collision.getPowerUpAt(new Position(3, 3)));
-        assertNull(collision.getPowerUpAt(new Position(4, 4)));
+        assertEquals(powerUp, collision.getPowerUpAt(new Position(7, 7)));
+
+        assertNull(collision.getPowerUpAt(new Position(8, 8)));
     }
+
 
     @Test
     void testGetPortalAt() {
