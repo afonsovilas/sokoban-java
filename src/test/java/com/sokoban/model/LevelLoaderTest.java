@@ -10,6 +10,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class LevelLoaderTest {
 
     @Test
+    void testLoadLevel1() {
+        LevelLoader loader = new LevelLoader();
+        Level level = loader.loadLevel(1);
+
+        if (level != null) {
+            assertNotNull(level.controller, "O initialize() deve ser chamado para criar o controller");
+            assertNotNull(level.collision, "O initialize() deve ser chamado para criar a collision");
+        }
+    }
+
+    @Test
     void testLoadValidLevelWithMetadata() {
         LevelLoader loader = new LevelLoader();
 
@@ -28,6 +39,26 @@ class LevelLoaderTest {
         assertEquals(3, level.getHeight());
         assertNotNull(level.getHero(), "O herói deve ser criado");
         assertEquals(new Position(2, 1), level.getHero().getPosition());
+    }
+
+    @Test
+    void testLivesParsingStrippedFromMap() {
+        LevelLoader loader = new LevelLoader();
+
+        List<String> fakeLines = Arrays.asList(
+                "Lives: 5",
+                "#####",
+                "# X #",
+                "#####"
+        );
+
+        Level level = loader.createLevelFromLines(fakeLines);
+
+        assertNotNull(level);
+        assertEquals(5, level.getLives());
+
+        assertEquals(3, level.getHeight(), "A linha 'Lives' não deve fazer parte do mapa");
+        assertEquals(5, level.getWidth());
     }
 
     @Test
@@ -77,5 +108,16 @@ class LevelLoaderTest {
         LevelLoader loader = new LevelLoader();
         Level level = loader.loadLevel(9999);
         assertNull(level);
+    }
+
+    @Test
+    void testInitializationLogic() {
+        LevelLoader loader = new LevelLoader();
+        List<String> fakeLines = Arrays.asList("###", "#X#", "###");
+
+        Level level = loader.createLevelFromLines(fakeLines);
+
+        assertNotNull(level.controller);
+        assertNotNull(level.getHero());
     }
 }

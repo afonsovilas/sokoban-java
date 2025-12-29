@@ -77,4 +77,38 @@ class CollisionTest {
 
         assertNull(collision.getPowerUpAt(new Position(8, 8)));
     }
+
+    @Test
+    void testGetOtherPortal() {
+        Portal p1 = new Portal(1, 1);
+        Portal p2 = new Portal(5, 5);
+
+        when(level.getPortals()).thenReturn(List.of(p1, p2));
+
+        assertEquals(p2, collision.getOtherPortal(p1));
+        assertEquals(p1, collision.getOtherPortal(p2));
+    }
+
+    @Test
+    void testGetPowerUpAt() {
+        PowerUp p = new PowerUp(3, 3);
+        when(level.getPowerUps()).thenReturn(List.of(p));
+
+        assertNotNull(collision.getPowerUpAt(new Position(3, 3)));
+        assertNull(collision.getPowerUpAt(new Position(4, 4)));
+    }
+
+    @Test
+    void testGetPortalAt() {
+        Portal portal = new Portal(3, 3);
+        when(level.getPortals()).thenReturn(List.of(portal));
+        assertEquals(portal, collision.getPortalAt(new Position(3, 3)), "Deve encontrar o portal se estiver na lista");
+
+        assertNull(collision.getPortalAt(new Position(4, 4)), "Deve retornar null se a posição estiver vazia de portais");
+    }
+
+    @Test
+    void testGetLevel() {
+        assertEquals(level, collision.getLevel());
+    }
 }
