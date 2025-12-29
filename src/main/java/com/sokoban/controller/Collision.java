@@ -1,39 +1,38 @@
 package com.sokoban.controller;
 
 import com.sokoban.model.*;
+import java.util.List;
 
 public class Collision {
-    private Level level;
+    private final Level level;
 
     public Collision(Level level) {
         this.level = level;
     }
 
-    public boolean isWall(Position position) {
-        for (Wall wall : level.getWalls()) {
-            if (wall.getPosition().equals(position)) {
-                return true;
+    private <T extends Element> T getElementAt(List<T> elements, Position position) {
+        for (T element : elements) {
+            if (element.getPosition().equals(position)) {
+                return element;
             }
         }
-        return false;
+        return null;
+    }
+
+    public boolean isWall(Position position) {
+        return getElementAt(level.getWalls(), position) != null;
     }
 
     public Box getBoxAt(Position position) {
-        for (Box box : level.getBoxes()) {
-            if (box.getPosition().equals(position)) {
-                return box;
-            }
-        }
-        return null;
+        return getElementAt(level.getBoxes(), position);
     }
 
     public Portal getPortalAt(Position position) {
-        for (Portal portal : level.getPortals()) {
-            if (portal.getPosition().equals(position)) {
-                return portal;
-            }
-        }
-        return null;
+        return getElementAt(level.getPortals(), position);
+    }
+
+    public PowerUp getPowerUpAt(Position position) {
+        return getElementAt(level.getPowerUps(), position);
     }
 
     public Portal getOtherPortal(Portal currentPortal) {
@@ -45,16 +44,8 @@ public class Collision {
         return null;
     }
 
-    public PowerUp getPowerUpAt(Position position) {
-        for (PowerUp p : level.getPowerUps()) {
-            if (p.getPosition().equals(position)) {
-                return p;
-            }
-        }
-        return null;
-    }
-
     public Level getLevel() { return level; }
+
     public boolean isFree(Position position) {
         return !isWall(position) && getBoxAt(position) == null;
     }

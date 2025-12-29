@@ -55,10 +55,22 @@ public class LevelLoader {
         int height = levelDesign.length;
 
         Level level = new Level(width, height);
-        level.loadLevel(levelDesign);
-        level.setLives(lives);
-        level.initialize();
 
+        for (int y = 0; y < height; y++) {
+            String line = levelDesign[y];
+            for (int x = 0; x < width; x++) {
+                if (x >= line.length()) break;
+
+                char c = line.charAt(x);
+                Element element = ElementFactory.createElement(c, x, y);
+
+                if (element != null) {
+                    level.addElement(element);
+                }
+            }
+        }
+
+        level.setLives(lives);
         return level;
     }
 }
