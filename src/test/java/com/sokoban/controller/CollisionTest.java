@@ -1,10 +1,7 @@
 package com.sokoban.controller;
 
 import com.sokoban.controller.Collision;
-import com.sokoban.model.Box;
-import com.sokoban.model.Level;
-import com.sokoban.model.Position;
-import com.sokoban.model.Wall;
+import com.sokoban.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -44,8 +41,40 @@ class CollisionTest {
         when(level.getWalls()).thenReturn(List.of(new Wall(1, 1)));
         when(level.getBoxes()).thenReturn(List.of(new Box(2, 2)));
 
-        assertFalse(collision.isFree(new Position(1, 1)));
-        assertFalse(collision.isFree(new Position(2, 2)));
-        assertTrue(collision.isFree(new Position(3, 3)));
+        assertFalse(collision.isFree(new Position(1, 1)), "Parede não é livre");
+        assertFalse(collision.isFree(new Position(2, 2)), "Caixa não é livre");
+        assertTrue(collision.isFree(new Position(3, 3)), "Vazio é livre");
+    }
+
+    @Test
+    void testGetPortalAt() {
+        Portal portal = new Portal(4, 4);
+        when(level.getPortals()).thenReturn(List.of(portal));
+
+        assertEquals(portal, collision.getPortalAt(new Position(4, 4)));
+
+        assertNull(collision.getPortalAt(new Position(5, 5)));
+    }
+
+    @Test
+    void testGetOtherPortal() {
+        Portal p1 = new Portal(10, 10);
+        Portal p2 = new Portal(20, 20);
+
+        when(level.getPortals()).thenReturn(List.of(p1, p2));
+
+        assertEquals(p2, collision.getOtherPortal(p1));
+
+        assertEquals(p1, collision.getOtherPortal(p2));
+    }
+
+    @Test
+    void testGetPowerUpAt() {
+        PowerUp powerUp = new PowerUp(7, 7);
+        when(level.getPowerUps()).thenReturn(List.of(powerUp));
+
+        assertEquals(powerUp, collision.getPowerUpAt(new Position(7, 7)));
+
+        assertNull(collision.getPowerUpAt(new Position(8, 8)));
     }
 }
