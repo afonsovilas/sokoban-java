@@ -26,8 +26,20 @@ class GameStateTest {
     private final Level levelMock = Mockito.mock(Level.class);
     private final LevelManager levelManagerMock = Mockito.mock(LevelManager.class);
     private final Game gameMock = Mockito.mock(Game.class);
+    private final Hero heroMock = Mockito.mock(Hero.class);
+    private GameState state;
 
-    private final GameState state = new GameState(levelMock, 1, levelManagerMock);
+    GameStateTest() {
+        when(levelMock.getHero()).thenReturn(heroMock);
+        when(heroMock.getPosition()).thenReturn(new Position(5, 5));
+
+        when(levelMock.getWidth()).thenReturn(10);
+        when(levelMock.getHeight()).thenReturn(10);
+        when(levelMock.getSteps()).thenReturn(0);
+        when(levelMock.getLives()).thenReturn(3);
+
+        state = new GameState(levelMock, 1, levelManagerMock);
+    }
 
     @Test
     void drawShouldRenderLevelAndDelegatesToViewer() throws IOException {
@@ -35,20 +47,12 @@ class GameStateTest {
         TextGraphics graphicsMock = mock(TextGraphics.class);
 
         when(screenMock.getTerminalSize()).thenReturn(new TerminalSize(50, 20));
-        when(levelMock.getWidth()).thenReturn(10);
-        when(levelMock.getHeight()).thenReturn(10);
-        when(levelMock.getSteps()).thenReturn(0);
-        when(levelMock.getLives()).thenReturn(3);
-        when(levelMock.getPowerUpTime()).thenReturn(0L);
         when(levelMock.getTargets()).thenReturn(Collections.emptyList());
         when(levelMock.getPortals()).thenReturn(Collections.emptyList());
         when(levelMock.getPowerUps()).thenReturn(Collections.emptyList());
         when(levelMock.getWalls()).thenReturn(Collections.emptyList());
         when(levelMock.getBoxes()).thenReturn(Collections.emptyList());
 
-        Hero heroMock = mock(Hero.class);
-        when(heroMock.getPosition()).thenReturn(new Position(5, 5));
-        when(levelMock.getHero()).thenReturn(heroMock);
         when(graphicsMock.newTextGraphics(any(), any())).thenReturn(graphicsMock);
 
         state.draw(screenMock, graphicsMock);
@@ -87,8 +91,6 @@ class GameStateTest {
 
         verify(gameMock).saveGameState(state);
         verify(gameMock).setState(any(MenuState.class));
-
-        verify(levelMock, never()).processKey(any());
     }
 
     @Property
@@ -99,7 +101,7 @@ class GameStateTest {
 
         state.step(gameMock, key);
 
-        verify(levelMock).processKey(key);
+        verify(levelMock, atLeastOnce()).saveState();
 
         verify(gameMock, never()).saveGameState(any());
         verify(gameMock, never()).setState(any());
@@ -112,17 +114,11 @@ class GameStateTest {
 
     @Provide
     Arbitrary<KeyStroke> gamePlayKeys() {
-        return Arbitraries.oneOf(
-                Arbitraries.chars().alpha()
-                        .filter(c -> c != 'q' && c != 'Q' && c != 'r' && c != 'R')
-                        .map(c -> new KeyStroke(c, false, false)),
-                Arbitraries.of(
-                        new KeyStroke(KeyType.ArrowUp),
-                        new KeyStroke(KeyType.ArrowDown),
-                        new KeyStroke(KeyType.ArrowLeft),
-                        new KeyStroke(KeyType.ArrowRight),
-                        new KeyStroke(KeyType.Enter)
-                )
+        return Arbitraries.of(
+                new KeyStroke(KeyType.ArrowUp),
+                new KeyStroke(KeyType.ArrowDown),
+                new KeyStroke(KeyType.ArrowLeft),
+                new KeyStroke(KeyType.ArrowRight)
         );
     }
 }

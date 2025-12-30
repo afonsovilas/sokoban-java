@@ -15,8 +15,7 @@ class LevelLoaderTest {
         Level level = loader.loadLevel(1);
 
         if (level != null) {
-            assertNotNull(level.controller, "O initialize() deve ser chamado para criar o controller");
-            assertNotNull(level.collision, "O initialize() deve ser chamado para criar a collision");
+            assertNotNull(level.getHero(), "O nível deve ter um herói carregado");
         }
     }
 
@@ -117,7 +116,7 @@ class LevelLoaderTest {
 
         Level level = loader.createLevelFromLines(fakeLines);
 
-        assertNotNull(level.controller);
+        assertNotNull(level);
         assertNotNull(level.getHero());
     }
 }

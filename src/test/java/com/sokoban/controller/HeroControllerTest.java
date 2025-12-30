@@ -131,14 +131,14 @@ class HeroControllerTest {
 
     @Test
     void testSuperPowerToggleAndTiming() {
-        controller.setSuperPower(true);
+        controller.setSuperPower(10000);
         assertTrue(controller.hasSuperPower());
 
         long remaining = controller.getRemainingTime();
         assertTrue(remaining > 0, "Deve ser positivo");
         assertTrue(remaining <= 10000, "Não pode ser maior que a duração inicial (mata o mutante de soma)");
 
-        controller.setSuperPower(false);
+        controller.setSuperPower(0);
         assertFalse(controller.hasSuperPower());
     }
 
@@ -184,7 +184,7 @@ class HeroControllerTest {
     void testMoveHeroVertically() {
 
         when(hero.getPosition()).thenReturn(new Position(10, 10));
-        Position targetPos = new Position(10, 11); // Move para baixo (0, 1)
+        Position targetPos = new Position(10, 11);
 
         when(collision.isWall(targetPos)).thenReturn(false);
         when(collision.getBoxAt(targetPos)).thenReturn(null);
