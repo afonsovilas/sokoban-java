@@ -36,7 +36,7 @@ Visual Feedback: Elements have distinct colors, and boxes change color (Green) w
 
  ### Screenshots
 
-The following screenshots illustrate the general look of our game:
+The following screenshots illustrate the general look of our game, there are more images and gifs available in the docs/ file:
 
 Menu
 <p align="center" justify="center"> <img src="docs/images/screenshots/Menu.png"/> </p> <p align="center"> <b><i>Fig 1. Main Menu with options</i></b> </p>
@@ -139,3 +139,9 @@ Line Coverage: 87%
 Mutation Coverage: 75%
 
 <p align="center" justify="center"> <img src="docs/images/screenshots/coverage_report.png"/> </p> <p align="center"> <b><i>Fig 4. Pitest Coverage Report.</i></b> </p>
+
+### Gameplay/WinLevel Demo
+![Gameplay](docs/gifs/winLevel.gif)
+
+### Undo Feature
+![Undo System](docs/gifs/undo.gif)

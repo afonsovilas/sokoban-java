@@ -139,3 +139,10 @@ Line Coverage: 88%
 Mutation Coverage: 76%
 
 <p align="center" justify="center"> <img src="docs/images/screenshots/coverage_report.png"/> </p> <p align="center"> <b><i>Fig 4. Pitest Coverage Report.</i></b> </p>
+
+
+### Gameplay/WinLevel Demo
+![Gameplay](docs/gifs/winLevel.gif)
+
+### Undo Feature
+![Undo System](docs/gifs/undo.gif)
