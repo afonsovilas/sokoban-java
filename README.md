@@ -4,7 +4,7 @@
 
 This project is a Java-based implementation of the classic puzzle game Sokoban. The player controls a warehouse keeper whose goal is to push boxes to specific storage locations (targets). The game challenges the player's logical thinking and spatial awareness, as boxes can only be pushed (never pulled) and walls restrict movement.
 
-The game features a level system that increases in difficulty, a main menu for navigation, and a collision system to enforce the game rules.
+The game features a level system that increases in difficulty, a main menu for navigation, a high-score tracking system, and special gameplay mechanics like Super Powers and Undo capabilities.
 
 This project was developed by Martim Ferreira (up202403764@up.pt) and Afonso Vilas (up202403577@up.pt) for LDTS 2024-25.
 
@@ -12,7 +12,9 @@ This project was developed by Martim Ferreira (up202403764@up.pt) and Afonso Vil
 
 Main Menu: A navigational entry point that allows the player to start the game or exit the application.
 
-State Management: The game utilizes the State Pattern to switch between the Menu, the actual Gameplay, and level transitions.
+Level Selection: A menu that allows players to replay previously unlocked levels.
+
+State Management: The game utilizes the State Pattern to switch between the Menu, the actual Gameplay, Pausing, Victory screens, and the Scoreboard.
 
 Level Loading: Levels are read dynamically from text files (.txt), allowing for easy creation and modification of maps without changing the source code.
 
@@ -22,23 +24,15 @@ Box Interaction: The hero can push boxes if the space behind them is free. The s
 
 Win Condition: The level is completed when all boxes are placed on top of target positions. The game automatically detects this state and advances to the next level.
 
+Step Counter & High Scores: The game tracks the number of steps taken. The best performance (fewest steps) for each level is saved persistently to a file and displayed in the Scoreboard.
+
+Undo System: Players can reverse their last move (pressing 'U'), reverting positions, steps, and power-up states.
+
+Super Power: By collecting a "PowerUp" item, the player gains a temporary ability (handled via Strategy Pattern) to push two boxes at once for a limited time.
+
+Portals: Special elements that teleport the player to a corresponding location on the map.
+
 Visual Feedback: Elements have distinct colors, and boxes change color (Green) when placed correctly on a target.
-
- ### Planned Features
-
-Undo System: Implementation of the Command Pattern to allow players to reverse their last move.
-
-Move Counter: An element to track the number of steps taken, adding a layer of optimization challenge.
-
-Reset Level: Functionality to instantly restart the current level.
-
-High Scores: Saving the best performance (fewest steps) for each level.
-
-Additional Powers like:
-
--SuperPower : Allow the player to move 2 Boxes at the same time.
-
--Portals: Allow the player and boxes to teleport to a different location inside the map.
 
  ### Screenshots
 
@@ -48,24 +42,7 @@ Menu
 <p align="center" justify="center"> <img src="docs/images/screenshots/Menu.png"/> </p> <p align="center"> <b><i>Fig 1. Main Menu with options</i></b> </p>
 
 Gameplay
-<p align="center" justify="center"> <img src="docs/images/screenshots/gameplay.png"/> </p> <p align="center"> <b><i>Fig 2. Visual feedback when boxes are on targets</i></b> </p>
-
-Mockups (Current and future Features)
-To guide the development of future features, we designed mockups illustrating the User Interface flow and new mechanics.
-
-<p align="center" justify="center">
-  <img src="docs/images/mockups.png"/>
-</p>
-<p align="center">
-  <b><i>Fig 3. Sketches showing the Main Menu, Score Board, Level Selection, and new gameplay mechanics (Portals and Powers)</i></b>
-</p>
-
-Design Decisions shown in Mockups:
-- **Step Counter:** To introduce a resource management challenge.
-- **Reset Button:** Reset the current Level.
-- **Powers & Portals:** New puzzle elements to increase complexity in later levels.
-- **Level Selection:** A grid menu to allow players to replay specific levels.
-- **Score Board:** To save and display the best performance (High Scores).
+<p align="center" justify="center"> <img src="docs/images/screenshots/gameplay.png"/> </p> <p align="center"> <b><i>Fig 2. Visual feedback of Level4</i></b> </p>
 
  ## GAME DOCUMENTATION
 
@@ -75,65 +52,57 @@ Design Decisions shown in Mockups:
 
 The project is structured according to the Model-View-Controller (MVC) architectural pattern to ensure a clear separation of concerns. This structure is evident in the package organization defined in our UML:
 
-Model (com.sokoban.model): Represents the data and the business logic of the game. It includes classes like Level, Menu, and game elements (Hero, Box, Wall, Target). These classes are unaware of the visual representation.
+Model (com.sokoban.model): Represents the data and the business logic of the game. It includes classes like Level, Hero, Box, and Menu. These classes are unaware of the visual representation.
 
-View (com.sokoban.viewer): Responsible for displaying the data on the screen. Classes like LevelViewer, MenuViewer, and ElementViewer (e.g., HeroViewer, BoxViewer) handle all Lanterna drawing operations.
+View (com.sokoban.view): Responsible for displaying the data on the screen using the Lanterna library. Classes like LevelViewer and MenuViewer handle all drawing operations.
 
-Controller (com.sokoban.controller & com.sokoban.states): Handles user input and updates the model. HeroController processes movement logic and collisions , while MenuState and GameState manage the application flow and input delegation.
-
+Controller (com.sokoban.controller & com.sokoban.states): Handles user input and updates the model. HeroController processes movement logic and collisions, while LevelController manages the input delegation within the game loop.
+    
  ### 2. Design Patterns
    
- #### Current Design Patterns
+ #### Design Patterns
 
  ##### -State Pattern
 
-Problem: The game has distinct behaviors depending on the current context (e.g., navigating the Menu uses different logic than controlling the Hero in the Game). Managing these contexts with simple conditional statements in the main loop would lead to unmaintainable code.
+Context: The game has distinct behaviors depending on whether the user is in a Menu, Playing, or viewing the Scoreboard.
 
-Solution: We implemented the State Pattern. The Game class maintains a reference to a current State. We defined an abstract State<T> class with methods step() and draw(). Concrete implementations, MenuState and GameState, define specific behaviors for each context.
+Implementation: We defined an abstract State<T> class. Concrete implementations (MenuState, GameState, ScoreBoardState, GameWonState) define specific behaviors for step() and draw().
 
-Consequences:
-
-( + ) New states (e.g., "GameOverState", "InstructionsState") can be added easily without modifying the Game class.
-
-( + ) Encapsulates state-specific behavior, keeping the main loop clean.
+Benefit: Allows the Game class to delegate logic to the current state object, avoiding complex if-else chains in the main loop.
 
  ##### -Factory Pattern (Simple Factory)
 
-Problem: When loading a level from a text file, the application reads characters (e.g., '#', 'X') and needs to instantiate the corresponding objects (Wall, Hero). Placing this instantiation logic directly inside the LevelLoader would violate the Single Responsibility Principle and create high coupling.
+Context: Creating complex menus (Main Menu, Pause Menu, Win Menu) involves initializing many commands and items.
 
-Solution: We utilized a simple factory mechanism via the ElementCreation class. The LevelLoader delegates the object creation to this factory, which takes a character and coordinates returns the Element instance.
+Implementation: The MenuFactory class provides static methods (createMainMenu, createPauseMenu, etc.) to construct these objects.
 
-Consequences:
-
-( + ) Centralizes object creation logic in one place.
-
-( + ) Decouples the file parsing logic from the object instantiation logic.
-
- #### Planned Design Patterns
+Benefit: Centralizes creation logic and cleans up the State classes.
 
  ##### -Command Pattern
 
-Problem: Implementing an "Undo" feature is difficult if movement logic is hardcoded. We need a way to store the history of actions performed by the player to reverse them later.
+Context: Menus need to execute different actions (Start Game, Exit, Open Scoreboard) without the Menu class knowing the details of these actions.
 
-Solution: We plan to encapsulate all game actions (e.g., `MoveUp`, `PushBox`) as command objects. These objects will be stored in a stack history. When the player requests an "Undo", the game pops the last command from the stack and executes its `undo()` method.
+Implementation: We created a Command interface. Concrete commands like LoadLevelCommand and OpenLevelMenuCommand encapsulate these requests.
 
-Consequences:
-
-( + ) Allows for infinite undo functionality.
-
-( + ) Decouples the object that invokes the operation from the one that knows how to perform it.
+Benefit: Decouples the UI (Menu) from the business logic, allowing generic menus to contain any type of action.
 
  ##### -Strategy Pattern
 
-Problem: The game features different movement mechanics, such as the "SuperPower" allowing the player to push multiple boxes at the same time. Using complex `if-else` statements inside the Hero class to check for active powers would make the code rigid and hard to extend.
+Context: The Hero has different movement capabilities. Normally, he pushes one box, but with a PowerUp, he can push two.
 
-Solution: We plan to define a `MovementStrategy` interface. The Hero will hold a reference to a specific strategy (e.g., `NormalPushStrategy`, `SuperPushStrategy`). When a power-up is collected, we simply swap the strategy object at runtime.
+Implementation: We defined a MovementStrategy interface. NormalMovementStrategy implements standard physics, while SuperMovementStrategy implements the powered-up physics. The PowerUpManager swaps these strategies at runtime.
 
-Consequences:
+Benefit: Allows dynamic switching of game rules without cluttering the HeroController with conditional logic.
 
-( + ) New powers can be added easily by creating new Strategy classes.
+ ##### -Memento Pattern
 
-( + ) Allows switching movement behavior dynamically at runtime without changing the Hero class.
+Context: The "Undo" feature requires restoring the game to a previous state.
+
+Implementation: The Level class creates LevelMemento objects containing the state of the Hero, Boxes, and PowerUps. These mementos are stored in a Stack.
+
+Implementation Detail: When 'U' is pressed, the state is popped from the stack and restored.
+
+Benefit: Encapsulates the state snapshot logic, preserving encapsulation while allowing full restoration.
 
  ### 3. UML Class Diagram
 
@@ -143,10 +112,30 @@ The following class diagram illustrates the project structure, we used the Plant
 
  ### 4. Code Smells and Refactoring
 
-Refactoring Performed:
+During development, we performed several refactoring steps to improve code quality and testability:
 
-Separation of View and Model: Initially, game elements (like Hero or Wall) contained their own draw() methods. We refactored this by extracting the drawing logic into specific viewer classes (HeroViewer, WallViewer) implementing the ElementViewer interface. This eliminated the dependency on the GUI library (Lanterna) from the Model layer.
+Extract Controller: We moved input handling logic from the Level class to LevelController to strictly adhere to the Single Responsibility Principle. Level is now purely a data container, while LevelController handles the logic.
 
-Class decomposition: The Level class initially handled loading, logic, and drawing. We extracted LevelLoader for file operations and LevelViewer for rendering, leaving Level responsible only for holding the data.
+Dependency Injection for Testing: We modified ScoreManager and LevelLoader to allow dependency injection of file paths or mocks. This enabled safe unit testing without overwriting real high-score files or requiring real level files.
 
-Tests using JUnit 5 and Mockito: Mockito was crucial to test the classes, allowing us to simulate specific game scenarios (like pushing boxes into walls) without needing to instantiate the full game environment or depend on the GUI.
+Viewer Separation: We extracted drawing logic from Model classes into dedicated Viewers early in the project to enforce MVC boundaries.
+
+ ### 5. Testing
+
+We utilized JUnit 5 for unit testing, Mockito for isolating dependencies (especially Lanterna), and jqwik for Property-Based Testing (PBT).
+
+Unit Testing: We ensured that core logic (Hero movement, Collisions, Score management) functions correctly.
+
+Mocking: We mocked the Screen and TextGraphics to test the View and State logic without needing a real terminal window.
+
+Property-Based Testing: We used PBT in GameStateTest and MenuStateTest to ensure the game is robust against random key inputs, guaranteeing that invalid keys are ignored and do not crash the application.
+
+Mutation Testing: We used Pitest to assess the quality of our tests.
+
+Coverage Summary:
+
+Line Coverage: 87%
+
+Mutation Coverage: 75%
+
+<p align="center" justify="center"> <img src="docs/images/screenshots/coverage_report.png"/> </p> <p align="center"> <b><i>Fig 4. Pitest Coverage Report.</i></b> </p>

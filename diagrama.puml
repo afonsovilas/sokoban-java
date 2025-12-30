@@ -22,90 +22,113 @@ package "com.sokoban.states" {
     }
     class MenuState
     class GameState
+    class ScoreBoardState
+    class WinMenuState
+    class GameWonState
 }
 
 package "com.sokoban.model" {
-    class Menu {
-        - entries : List<String>
-    }
+    class Menu
     class Level {
-        - width : int
-        - height : int
-        - walls : List<Wall>
-        - boxes : List<Box>
-        - targets : List<Target>
+        - history : Stack<LevelMemento>
+        + undo()
+        + saveState()
     }
+    class LevelMemento {
+        - heroPosition : Position
+        - boxPositions : Map<Box, Position>
+    }
+    class LevelManager
     class LevelLoader
-    class ElementCreation
+    class MenuFactory
 }
 
-package "com.sokoban.model.game.elements" {
+package "com.sokoban.model.elements" {
     abstract class Element
     class Hero
     class Box
     class Wall
     class Target
+    class Portal
+    class PowerUp
 }
 
-package "com.sokoban.viewer" {
-    class MenuViewer
+package "com.sokoban.view" {
     class LevelViewer
-    interface ElementViewer<T> {
-        + draw(element: T, graphics: TextGraphics)
-    }
-    class HeroViewer
-    class BoxViewer
-    class WallViewer
-    class TargetViewer
+    class MenuViewer
+    class ScoreBoardViewer
+    class WinMenuViewer
+    class GameWonViewer
+    interface ElementViewer
 }
 
 package "com.sokoban.controller" {
+    class LevelController {
+        + handleInput(key: KeyStroke)
+    }
     class HeroController {
         + moveHero(direction: Position)
     }
+    class PowerUpManager
+    class Collision
     class GameRules
+
+    interface Command {
+        + execute(game: Game)
+    }
+    class LoadLevelCommand
+    class OpenLevelMenuCommand
+
+    interface MovementStrategy
 }
 
 ' --- RELAÇÕES ---
 
-' Main Game Logic
+' Core
 Application ..> Game : creates
-Game o-- State : has current
+Game o-- State : active state
 
-' State Pattern
+' State Inheritance
 State <|-- MenuState
 State <|-- GameState
+State <|-- ScoreBoardState
+State <|-- WinMenuState
+State <|-- GameWonState
 
-' MVC Links
-MenuState o-- Menu : model
-MenuState o-- MenuViewer : uses
-
+' MVC Connections
 GameState o-- Level : model
-GameState o-- LevelViewer : uses
+GameState o-- LevelController : controller
+GameState o-- LevelViewer : view
+
+MenuState o-- Menu : model
+MenuState o-- MenuViewer : view
+
+ScoreBoardState o-- ScoreBoardViewer : view
+
+' Controllers Logic
+LevelController --> HeroController : uses
+LevelController --> Level : updates
+HeroController --> Collision : uses
+HeroController --> PowerUpManager : uses
+PowerUpManager o-- MovementStrategy : strategy
+Menu ..> Command : contains
+
+' Factory & Memento
+MenuFactory ..> Menu : creates
+Level ..> LevelMemento : creates/restores
+LevelLoader ..> Level : creates
 
 ' Viewers
 LevelViewer ..> ElementViewer : uses
-ElementViewer <|.. HeroViewer
-ElementViewer <|.. BoxViewer
-ElementViewer <|.. WallViewer
-ElementViewer <|.. TargetViewer
 
-' Elements Inheritance (CORRIGIDO AQUI)
+' Elements
 Element <|-- Hero
 Element <|-- Box
 Element <|-- Wall
 Element <|-- Target
+Element <|-- Portal
+Element <|-- PowerUp
 
-' Level Composition
 Level *-- Element : contains
-' (Para ser mais específico, o Level tem listas destes tipos)
-
-' Factory & Loader
-LevelLoader ..> ElementCreation : uses
-LevelLoader ..> Level : creates
-
-' Controllers
-Level --> HeroController : uses
-HeroController --> GameRules : uses
 
 @enduml
